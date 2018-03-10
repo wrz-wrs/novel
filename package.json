@@ -1,0 +1,29 @@
+{
+  "name": "novel",
+  "version": "1.0.0",
+  "description": "novel crawler",
+  "main": "index.js",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "ejs": "^2.5.7",
+    "entities": "^1.1.1",
+    "iconv-lite": "^0.4.19",
+    "koa": "^2.5.0",
+    "koa-ejs": "^4.1.0",
+    "koa-router": "^7.4.0",
+    "koa-views": "^6.1.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "article",
+    "crawler",
+    "demo",
+    "koa2",
+    "promise"
+  ],
+  "author": "eltoo",
+  "license": "ISC"
+}
