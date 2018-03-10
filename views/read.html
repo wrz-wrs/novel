@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>放开</title>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no"/>
+	<script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+</head>
+<style type="text/css">
+	html,body{
+		padding: 0px;
+		margin: 0px;
+		height: 100%;
+		width: 100%;
+	}
+	p{
+		padding: 8px 8px;
+		margin: 0px 0px;
+		line-height: 24px;
+		letter-spacing: 2px;
+	}
+</style>
+<body>
+	<div id="btn" style="position: absolute;width: 100%;z-index: 5;">
+		<div id="previousBtn" style="width: 50%; height: 100%; left: 0px; float: left;">
+			
+		</div>
+		<div id="nextBtn" style="width: 50%; height: 100%; right: 0px; float: left;">
+			
+		</div>
+	</div>
+
+
+
+	<div id="tbox" style="width: 100%; height: 100%; display: block; overflow: hidden;">
+		<div id="pbox" style="position: relative; top: 0px;">
+			
+			<p>
+				站在监狱栏杆前的罗兰和安娜只有一臂的距离，他能清楚地看到对方布满灰尘和伤痕的脸颊。稚嫩的五官意味着她尚未成年，但她的神情上却捕捉不到一丝稚气。不止如此，就连生气都很难找到——这种不协调的感觉罗兰只在电视上看到过。那是遭受了贫困、饥饿、寒冷等苦难折磨的流浪孤儿接受采访时露出的模样。但又不完全一样，流浪孤儿面对镜头时总是佝偻着身体，低着头，但安娜没有。
+			</p>
+			<p>
+				站在监狱栏杆前的罗兰和安娜只有一臂的距离，他能清楚地看到对方布满灰尘和伤痕的脸颊。稚嫩的五官意味着她尚未成年，但她的神情上却捕捉不到一丝稚气。不止如此，就连生气都很难找到——这种不协调的感觉罗兰只在电视上看到过。那是遭受了贫困、饥饿、寒冷等苦难折磨的流浪孤儿接受采访时露出的模样。但又不完全一样，流浪孤儿面对镜头时总是佝偻着身体，低着头，但安娜没有。
+			</p>
+		</div>
+	</div>
+</body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+	var articleName = '<%- aname %>'
+	var chapterNumber = '<%- cn %>'
+
+	var tbox = $('#tbox')
+	var pbox = $('#pbox')
+	var previousBtn = $('#previousBtn')
+	var nextBtn = $('#nextBtn')
+	var btn = $('#btn')
+	
+
+	var pboxH = ''
+	var tboxH = ''
+
+	resetH()
+
+	function resetH () {
+		pboxH = parseInt(pbox.height())
+		tboxH = parseInt(tbox.height())
+		btn.css({'height': tboxH+'px'})
+	}
+
+	function move (bool) {
+		var m = previous_next(bool)
+		if (m > 0) {
+			nextPage()
+			m = parseInt(pbox.css('top'))
+		}
+		if (m < -pboxH) {
+			nextPage()
+			m = parseInt(pbox.css('top'))
+		}
+		m += 'px'
+		pbox.css({'top' : m});
+	}
+
+	function previous_next (bool) {
+		var ptopt = parseInt(pbox.css('top'))
+		if (bool) {
+			return (ptopt - tboxH + 20)
+		} else {
+			return (ptopt + tboxH - 20)
+		}
+	}
+
+	function reSet () {
+		pbox.empty()
+		pbox.css({'top': '0px'})
+	}
+
+	function nextPage () {
+		var data = {
+			'an': articleName,
+			'cn': chapterNumber
+		}
+		reSet()
+		$.ajax({
+			type: 'POST',
+			url:'./a',
+			data: data,
+			success: function (data) {
+
+				var htmlString = ''
+				data.dataArray.forEach(function (v) {
+					htmlString += '<p>' + v + '</p>'
+				})
+				pbox.html(htmlString)
+
+				resetH()
+			}
+		})
+	}
+
+	previousBtn.click( function () {
+		move(false)
+	})
+
+	nextBtn.click( function () {
+		move(true)
+	})
+
+</script>
+</html>
