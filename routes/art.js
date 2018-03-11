@@ -5,8 +5,11 @@ router.get('/', async (ctx) => {
 
 	var an = ctx.query.an
 	var cn = ctx.query.cn
-
-	await ctx.render('read', {aname: an, cn: cn})
+	
+	await ctx.render('read', {
+		name:'ssss',
+		cn:'sss',
+	})
 })
 
 router.post('/', async (ctx) => {
