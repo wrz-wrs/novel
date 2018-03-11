@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>放开</title>
+	<title><%= title %></title>
 	<meta name="apple-mobile-web-app-capable" content="yes"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no"/>
 	<script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
@@ -59,7 +59,8 @@
 	var pboxH = ''
 	var tboxH = ''
 
-	resetH()
+	var cacheContent = ''
+	
 
 	function resetH () {
 		pboxH = parseInt(pbox.height())
@@ -70,11 +71,11 @@
 	function move (bool) {
 		var m = previous_next(bool)
 		if (m > 0) {
-			nextPage()
+			getPageContent(true)
 			m = parseInt(pbox.css('top'))
 		}
 		if (m < -pboxH) {
-			nextPage()
+			getPageContent(true)
 			m = parseInt(pbox.css('top'))
 		}
 		m += 'px'
@@ -95,7 +96,10 @@
 		pbox.css({'top': '0px'})
 	}
 
-	function nextPage () {
+	function getPageContent (isnext) {
+		if (isnext) {
+			chapterNumber++
+		}
 		var data = {
 			'an': articleName,
 			'cn': chapterNumber
@@ -111,8 +115,11 @@
 				data.dataArray.forEach(function (v) {
 					htmlString += '<p>' + v + '</p>'
 				})
+				if (data.title) {
+					console.log(data.title)
+					document.title = data.title
+				}
 				pbox.html(htmlString)
-
 				resetH()
 			}
 		})
@@ -125,6 +132,13 @@
 	nextBtn.click( function () {
 		move(true)
 	})
+
+	function init () {
+		resetH()
+		getPageContent(false)
+	}
+
+	init()
 
 </script>
 </html>

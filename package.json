@@ -9,6 +9,7 @@
     "entities": "^1.1.1",
     "iconv-lite": "^0.4.19",
     "koa": "^2.5.0",
+    "koa-bodyparser": "^3.2.0",
     "koa-ejs": "^4.1.0",
     "koa-router": "^7.4.0",
     "koa-views": "^6.1.4"

@@ -1,6 +1,9 @@
 const entities = require("entities")
 const cheerio = require('cheerio')
 const GetHTML = require('./_get')
+const fs = require('fs')
+
+const conf = require('../conf')
 
 const gethtml = new GetHTML()
 
@@ -8,6 +11,8 @@ const get = function () {
 	const o = {}
 
 	o.init = async function (url) {
+		
+		console.log(url)
 		
 		let chapterContent = await gethtml.getBody(url, 'gbk')
 
@@ -40,6 +45,23 @@ const get = function () {
 		}
 
 		return json
+	}
+
+	o.load = function (novelName) {
+
+		let path = conf.save_novjson_path
+
+		let fliepath = `${path}/${novelName}.json`
+
+		if (fs.existsSync(fliepath)) {
+
+			let json = fs.readFileSync(fliepath)
+			json = JSON.parse(json)
+
+			return json
+		} else {
+			return false
+		}
 	}
 
 	return o 
