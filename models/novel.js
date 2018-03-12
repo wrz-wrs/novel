@@ -3,8 +3,10 @@ const iconv   = require('iconv-lite')
 const entities = require("entities")
 const http = require('http')
 const fs = require('fs')
-
 const conf = require('../conf')
+
+const GetHTML = require('./_get')
+const gethtml = new GetHTML()
 
 const options = {
 	'url': 'http://www.biqugezw.com/9_9767/',
@@ -29,7 +31,7 @@ const novel = function () {
 
 		if (_.isUpdate(timeStamp)) {
 
-			let chaptersHtml = await _.getBody(url, 'gbk')
+			let chaptersHtml = await gethtml.getBody(url, 'gbk')
 
 			let chaptersJson = _.analysisChapter(chaptersHtml)
 
@@ -41,24 +43,6 @@ const novel = function () {
 
 
 		// console.log(chaptersJson)
-	}
-
-	_.getBody = function (url, code) {
-		var body = ''
-		return new Promise( function (resolve, reject) {
-			http.get(url, function (res) {
-				var chunks = []
-				res.on('data', function(chunk){
-					chunks.push(chunk);
-				})
-
-				res.on('end', function(){
-					body = iconv.decode(Buffer.concat(chunks), code)
-					resolve(body)
-
-				})
-			})
-		})
 	}
 
 	_.analysisChapter = function (content) {

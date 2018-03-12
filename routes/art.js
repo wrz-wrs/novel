@@ -1,6 +1,5 @@
 const router = require('koa-router')()
 const CRA = require('../middle/index')
-
 const Chapter = require('../models/chapter')
 
 const cra = new CRA()
@@ -50,7 +49,7 @@ router.post('/', async (ctx) => {
 			title: title,
 			dataArray: content.dataArray
 		}
-		ctx.body = res		
+		ctx.body = res
 	} catch (err) {
 
 		console.log(err)
