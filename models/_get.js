@@ -16,8 +16,15 @@ const content = function () {
 				})
 
 				res.on('end', function(){
-					// body = Buffer.concat(chunks)
-					body = iconv.decode(Buffer.concat(chunks), code)
+
+					switch(code) {
+						case 'gbk':
+							body = iconv.decode(Buffer.concat(chunks), code)
+							break;
+						default:
+							body = Buffer.concat(chunks)
+							break;
+					}
 					resolve(body)
 
 				})
@@ -29,4 +36,3 @@ const content = function () {
 }
 
 module.exports = content
-
