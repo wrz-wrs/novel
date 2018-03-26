@@ -32,3 +32,5 @@ app.on('error', async function (err, ctx) {
 	// await ctx.render('error',{error: err})
 	console.log(err.stack);
 })
+
+// test
