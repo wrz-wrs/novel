@@ -5,6 +5,7 @@ router.get('/', async (ctx) => {
 })
 
 router.post('/', async (ctx) => {
+	
 	let novelname = ctx.request.body.an
 
 	ctx.body = novelname
