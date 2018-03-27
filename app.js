@@ -1,15 +1,18 @@
+const fs = require('fs')
 const Koa = require('koa')
 const app = new Koa()
 const views = require('koa-views')
 const path = require('path')
 const static = require('koa-static')
 const bodyParser = require('koa-bodyparser')
+const conf = require('./conf')
 
 const router = require('./routes/index')
 
 
 // 静态资源目录对于相对入口文件index.js的路径
 const staticPath = './public'
+
 
 app.use(static(
   path.join( __dirname,  staticPath)
@@ -33,4 +36,10 @@ app.on('error', async function (err, ctx) {
 	console.log(err.stack);
 })
 
-// tessssst
+function iit() {
+	if (!fs.existsSync(conf.save_novjson_path)) {
+		fs.mkdirSync(conf.save_novjson_path)
+	}
+}
+
+iit()
