@@ -1,8 +1,17 @@
-const Novel = require('../models/novel')
+const novel = require('../models/novel')
 
 
-var nov = new Novel()
-nov.init('http://www.biqugezw.com/9_9767/', '放开那个女巫')
+var cc = async function() {
+	try	{
+		// var s = await novel.init('http://www.biqugezw.com/9_9767/', '放开那个女巫')
+		var s = await novel.init('http://www.23us.so/files/article/html/15/15610/index.html', '某御坂妹')
+		// console.log(s)
+	} catch (err) {
+		console.log(err)
+	}
+}
+
+cc()
 /*
 {
 	"updateTime":1520684137324,

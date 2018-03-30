@@ -2,10 +2,13 @@ const iconv   = require('iconv-lite')
 const entities = require("entities")
 const http = require('http')
 
-const content = function () {
-	const o = {}
+class Content {
 
-	o.getBody = function (url, code) {
+	constructor () {
+		// super()
+	}
+
+	getBody (url, code) {
 		return new Promise( function (resolve, reject) {
 			var body = ''
 
@@ -26,13 +29,12 @@ const content = function () {
 							break;
 					}
 					resolve(body)
-
 				})
 			})
 		})
 	}
 
-	return o 
+
 }
 
-module.exports = content
+module.exports = new Content()

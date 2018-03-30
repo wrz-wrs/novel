@@ -1,5 +1,7 @@
 const router = require('koa-router')()
 
+const chapter = require('../models/chapter')
+
 // select novel
 router.get('/', async (ctx) => {
 
@@ -15,6 +17,9 @@ router.get('/', async (ctx) => {
 		ctx.body = result
 	}
 })
+
+
+
 
 // create novel
 router.post('/', async (ctx) => {
@@ -33,6 +38,13 @@ router.put('/', async (ctx) => {
 router.delete('/', async (ctx) => {
 	ctx.body = jsonPackage({name:'kkk'})
 })
+
+function hasSite(novelname) {
+	return new Promise( function (resolve, reject) {
+
+		resolve('')
+	})
+}
 
 function jsonPackage(arg) {
 	var json = {

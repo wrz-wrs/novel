@@ -1,53 +1,35 @@
 const entities = require("entities")
 const cheerio = require('cheerio')
-const GetHTML = require('./_get')
 const fs = require('fs')
 
 const conf = require('../conf')
+const gethtml = require('./_get')
+const website = require('./website')
 
-const gethtml = new GetHTML()
+class getChapter {
 
-const get = function () {
-	const o = {}
-
-	o.init = async function (url) {
-		
-		console.log(url)
-		
-		let chapterContent = await gethtml.getBody(url, 'gbk')
-
-		let chapterJson = o.analysisContent(chapterContent)
-
-		return chapterJson
-
+	constructor() {
+        // super()
 	}
 
-	o.analysisContent = function (content) {
-		// entities.decodeXML()
+	async init (url) {
+		
+		url = website.autoChangeSite(url)
+		let site = website.analysisUrl(url)
+		let code = website.getCode(site)
 
-		const $ = cheerio.load(content)
+		if (site) {
 
-		var oldContent = $('#content').html()
+			let chapterContent = await gethtml.getBody(url, code)
 
-		oldContent = oldContent.replace(/[\r\n]/g, '')
+			let chapterJson = website.analysisContent(site, chapterContent)
 
-		var contentList = oldContent.split('<br>')
-		var newContent = []
+			return chapterJson
 
-		contentList.forEach(function (v) {
-			if (v != '') {
-				newContent.push(entities.decodeXML(v))
-			}
-		})
-
-		var json = {
-			'dataArray': newContent,
 		}
-
-		return json
 	}
 
-	o.load = function (novelName) {
+	load (novelName) {
 
 		let path = conf.save_novjson_path
 
@@ -63,8 +45,6 @@ const get = function () {
 			return false
 		}
 	}
-
-	return o 
 }
 
-module.exports = get
+module.exports = new getChapter()
