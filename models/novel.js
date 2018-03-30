@@ -5,8 +5,8 @@ const http = require('http')
 const fs = require('fs')
 const conf = require('../conf')
 
-const GetHTML = require('./_get')
-const gethtml = new GetHTML()
+const gethtml = require('./_get')
+const website = require('./website')
 
 const options = {
 	'url': 'http://www.biqugezw.com/9_9767/',
@@ -17,59 +17,46 @@ const options = {
 	},
 }
 
+
+
 /*
 * 1 默认初始化小说 json文件 保存章节信息
 * 
 */
 
-const novel = function () {
-	const _ = {}
+class Novel {
 
-	_.init = async function (url, novelName = _.time()) {
+	constructor () {
+        // super()
+	}
 
-		let timeStamp = _.loadTimeStamp(novelName)
+	async init (url, novelName = this.time()) {
 
-		if (_.isUpdate(timeStamp)) {
+		let site = website.analysisUrl(url)
+		let code = website.getCode(site)
 
-			let chaptersHtml = await gethtml.getBody(url, 'gbk')
+		console.log(site)
+		let timeStamp = this.loadTimeStamp(novelName)
 
-			let chaptersJson = _.analysisChapter(chaptersHtml)
+		if (this.isUpdate(timeStamp) && site) {
 
-			_.saveJson(chaptersJson, novelName)
+			let chaptersHtml = await gethtml.getBody(url, code)
+
+			let chaptersJson = website.analysisChapter(site, chaptersHtml)
+
+			console.log(chaptersJson)
+
+			// this.saveJson(chaptersJson, novelName)
 			
 		} else {
 			console.log(`24小时后更新...`)
 		}
-
-
-		// console.log(chaptersJson)
 	}
 
-	_.analysisChapter = function (content) {
-		const $ = cheerio.load(content)
-
-		var list = []
-
-		$('#list dl dd a').each( function (i, elem) {
-			list[i] = {
-				'serial': $(this).text(),
-				'url': $(this).attr('href')
-			}
-		})
-
-		var json = {}
-
-		list.forEach( function (v, k) {
-			json[k] = v
-		})
-
-		return json
-	}
-
-	_.saveJson = function (json = {}, name = 'default') {
+	saveJson (json = {}, name = 'default') {
 
 		let _json = {
-			updateTime: _.time(),
+			updateTime: this.time(),
 			novjson: json,
 		}
 
@@ -80,14 +67,14 @@ const novel = function () {
 		fs.writeFileSync(`${path}/${name}.json`, JSON.stringify(_json))
 	}
 
-	_.time = function () {
+	time () {
 
 		let date = new Date()
 
 		return date.getTime()
 	}
 
-	_.isUpdate = function (t) {
+	isUpdate (t) {
 
 		if (t == '') {
 
@@ -117,7 +104,7 @@ const novel = function () {
 		}
 	}
 
-	_.checkFile = function (filename) {
+	checkFile (filename) {
 		let path = conf.save_novjson_path
 		if (fs.existsSync(`${path}/${filename}.json`)) {
 			return true
@@ -126,7 +113,7 @@ const novel = function () {
 		}
 	}
 
-	_.loadTimeStamp = function (filename) {
+	loadTimeStamp (filename) {
 
 		let path = conf.save_novjson_path
 
@@ -146,8 +133,6 @@ const novel = function () {
 			return ''
 		}
 	}
-
-	return _
 }
 
-module.exports = novel
+module.exports = new Novel()

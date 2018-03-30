@@ -1,9 +1,8 @@
 const router = require('koa-router')()
-const CRA = require('../middle/index')
-const Chapter = require('../models/chapter')
+// const CRA = require('../middle/index')
+const chapter = require('../models/chapter')
 
-const cra = new CRA()
-const chapter = new Chapter()
+// const cra = new CRA()
 
 router.get('/', async (ctx) => {
 

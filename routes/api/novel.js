@@ -1,6 +1,6 @@
 const router = require('koa-router')()
 
-const chapter = require('../models/chapter')
+// const chapter = require('../models/chapter')
 
 // select novel
 router.get('/', async (ctx) => {

@@ -5,6 +5,7 @@
 const cheerio = require('cheerio')
 const iconv   = require('iconv-lite')
 const entities = require("entities")
+const http = require('http')
 
 const biqugezw = {
 
@@ -115,28 +116,66 @@ class Website {
 			'biqugezw': biqugezw,
 			'23us': us23,
 		}
+		this.siteName = ''
+		this.code = ''
+		this.url = ''
+		this.content = ''
 	}
 
-	analysisChapter (siteName, content) {
-		return this.site[siteName].analysisChapter(content)
+	_gethtml () {
+		return new Promise( function (resolve, reject) {
+			var body = ''
+
+			http.get(this.url, function (res) {
+				var chunks = []
+				res.on('data', function(chunk){
+					chunks.push(chunk);
+				})
+
+				res.on('end', function(){
+
+					switch(this.code) {
+						case 'gbk':
+							body = iconv.decode(Buffer.concat(chunks), this.code)
+							break;
+						default:
+							body = Buffer.concat(chunks)
+							break;
+					}
+					resolve(body)
+				})
+			})
+		})
 	}
 
-	analysisContent (siteName, content) {
-		return this.site[siteName].analysisContent(content)
+	init (paramurl) {
+		this.url = this._autoChangeSite(paramurl)
+		this.siteName = this._analysisUrl(this.url)
+		this.code = this._getCode(this.siteName)
 	}
 
-	analysisUrl (host) {
+	analysisChapter (content) {
+		return this.site[this.siteName].analysisChapter(content)
+	}
+
+	analysisContent (content) {
+		return this.site[this.siteName].analysisContent(content)
+	}
+
+	_analysisUrl (host) {
 		try	{
 			host = (host.match(/www\.(.*?)\./gi))[0]  // return www.***.
 			host = host.replace(/www\./gi, '').replace(/\./gi, '')
+
 			if (typeof this.site[host] == 'object') {
 				return host
 			} else {
 				console.log('暂时无法解析此网站')
+				throw new Error('Error Message: Website._analysisUrl() Error')
 				return false
 			}
 		} catch (err) {
-			
+			console.log(err)
 		}
 	}
 
@@ -144,7 +183,7 @@ class Website {
 	* 默认站点 this.site[0].host
 	* @param url /9_9767/1890292.html
 	*/
-	autoChangeSite (url) {
+	_autoChangeSite (url) {
 		let list = []
 
 		for(var key in this.site) {
@@ -154,7 +193,7 @@ class Website {
 		return list[0] + url
 	}
 
-	getCode (siteName) {
+	_getCode (siteName) {
 		return this.site[siteName].code
 	}
 }

@@ -1,0 +1,33 @@
+{
+  "apps": [
+    {
+      "name": "novel",
+      "script": "./app.js",
+      "watch": true,
+      "ignore_watch": [
+        "node_modules",
+        "logs",
+        "public",
+        ".git"
+      ],
+      "error_file": "logs/pm2/app-err.log",
+      "out_file": "logs/pm2/app-out.log",
+      "log_date_format": "YYYY-MM-DD HH:mm Z",
+      "env_development": {
+        "NODE_ENV": "development",
+        "PORT": 4000,
+        "IP": "http://192.168.2.189"
+      },
+      "env":{
+        "NODE_ENV": "production",
+        "PORT": 3001,
+        "IP": "http://stat.zumainfo.com"
+      },
+      "env_localhost":{
+        "NODE_ENV":"localhost",
+        "PORT":4000,
+        "IP":"http://127.0.0.1"
+      }
+    }
+  ]
+}
