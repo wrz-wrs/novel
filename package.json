@@ -13,7 +13,8 @@
     "koa-ejs": "^4.1.0",
     "koa-router": "^7.4.0",
     "koa-static": "^4.0.2",
-    "koa-views": "^6.1.4"
+    "koa-views": "^6.1.4",
+    "superagent": "^3.8.2"
   },
   "devDependencies": {},
   "scripts": {

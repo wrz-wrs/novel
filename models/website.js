@@ -5,8 +5,13 @@
 const cheerio = require('cheerio')
 const iconv   = require('iconv-lite')
 const entities = require("entities")
+const request = require('superagent')
 const http = require('http')
 
+//Hm_lvt_e76a04e81c3547cd631a432ba2046367:1519989506
+/*
+ * 挂掉了 superagent
+ */
 const biqugezw = {
 
 	code: 'gbk',
@@ -17,14 +22,15 @@ const biqugezw = {
 
 		const $ = cheerio.load(content)
 
+		console.log($('#list'))
 		var list = []
-		$('#list dl dd a').each( function (i, elem) {
+		$('.box-con #list dl dd a').each( function (i, elem) {
 			list[i] = {
 				'serial': $(this).text(),
 				'url': $(this).attr('href')
 			}
 		})
-
+		console.log(list[0])
 		var json = {}
 		list.forEach( function (value, key) {
 			json[key] = value
@@ -86,12 +92,10 @@ const us23 = {
 	},
 
 	analysisContent: function (content) {
+
 		const $ = cheerio.load(content)
-
-		var oldContent = $('#content').html()
-
+		var oldContent = $('#contents').html()
 		oldContent = oldContent.replace(/[\r\n]/g, '')
-
 		var contentList = oldContent.split('<br>')
 		var newContent = []
 
@@ -123,10 +127,12 @@ class Website {
 	}
 
 	_gethtml () {
+		let url = this.url
+		let code = this.code
 		return new Promise( function (resolve, reject) {
 			var body = ''
-
-			http.get(this.url, function (res) {
+			console.log(url)
+			http.get(url, function (res) {
 				var chunks = []
 				res.on('data', function(chunk){
 					chunks.push(chunk);
@@ -134,12 +140,14 @@ class Website {
 
 				res.on('end', function(){
 
-					switch(this.code) {
+					switch(code) {
 						case 'gbk':
-							body = iconv.decode(Buffer.concat(chunks), this.code)
+							// console.log('is gbk')
+							body = iconv.decode(Buffer.concat(chunks), code)
 							break;
 						default:
 							body = Buffer.concat(chunks)
+							body = body.toString()
 							break;
 					}
 					resolve(body)
@@ -148,10 +156,19 @@ class Website {
 		})
 	}
 
-	init (paramurl) {
-		this.url = this._autoChangeSite(paramurl)
+	_init (paramurl) {
+		this.url = paramurl
 		this.siteName = this._analysisUrl(this.url)
 		this.code = this._getCode(this.siteName)
+
+		console.log(this.url)
+	}
+
+	_init2 (paramurl) {
+		this.url = paramurl
+		this.siteName = this._analysisUrl(paramurl)
+		this.code = this._getCode(this.siteName)
+		// return this.code
 	}
 
 	analysisChapter (content) {
@@ -189,7 +206,8 @@ class Website {
 		for(var key in this.site) {
 			list.push(this.site[key].host)
 		}
-
+		// console.log(list[0])
+		// console.log(url)
 		return list[0] + url
 	}
 
@@ -199,4 +217,4 @@ class Website {
 }
 
 
-module.exports = new Website()
+module.exports = Website

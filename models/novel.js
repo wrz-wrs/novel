@@ -6,7 +6,7 @@ const fs = require('fs')
 const conf = require('../conf')
 
 const gethtml = require('./_get')
-const website = require('./website')
+const Website = require('./website')
 
 const options = {
 	'url': 'http://www.biqugezw.com/9_9767/',
@@ -24,29 +24,23 @@ const options = {
 * 
 */
 
-class Novel {
+class Novel extends Website{
 
 	constructor () {
-        // super()
+        super()
 	}
 
 	async init (url, novelName = this.time()) {
 
-		let site = website.analysisUrl(url)
-		let code = website.getCode(site)
+		this._init(url)
 
-		console.log(site)
 		let timeStamp = this.loadTimeStamp(novelName)
 
-		if (this.isUpdate(timeStamp) && site) {
+		if (this.isUpdate(timeStamp) && this.siteName) {
 
-			let chaptersHtml = await gethtml.getBody(url, code)
-
-			let chaptersJson = website.analysisChapter(site, chaptersHtml)
-
-			console.log(chaptersJson)
-
-			// this.saveJson(chaptersJson, novelName)
+			let chaptersHtml = await this._gethtml()
+			let chaptersJson = this.analysisChapter(chaptersHtml)
+			this.saveJson(chaptersJson, novelName)
 			
 		} else {
 			console.log(`24小时后更新...`)

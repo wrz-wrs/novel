@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>放开</title>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no"/>
+	<script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+</head>
+<style type="text/css">
+	html,body{
+		padding: 0px;
+		margin: 0px;
+		height: 100%;
+		width: 100%;
+	}
+	p{
+		padding: 8px 8px;
+		margin: 0px 0px;
+		line-height: 24px;
+		letter-spacing: 2px;
+	}
+</style>
+<body>
+	
+</body>
+
+
+<script>
+	var articleName = '<% - name %>'
+	var chapterNumber = '<%- cn %>'
+
+	var tbox = $('#tbox')
+	var pbox = $('#pbox')
+	var previousBtn = $('#previousBtn')
+	var nextBtn = $('#nextBtn')
+	var btn = $('#btn')
+	
+
+	var pboxH = ''
+	var tboxH = ''
+
+	resetH()
+
+	function resetH () {
+		pboxH = parseInt(pbox.height())
+		tboxH = parseInt(tbox.height())
+		btn.css({'height': tboxH+'px'})
+	}
+
+	function move (bool) {
+		var m = previous_next(bool)
+		if (m > 0) {
+			nextPage()
+			m = parseInt(pbox.css('top'))
+		}
+		if (m < -pboxH) {
+			nextPage()
+			m = parseInt(pbox.css('top'))
+		}
+		m += 'px'
+		pbox.css({'top' : m});
+	}
+
+	function previous_next (bool) {
+		var ptopt = parseInt(pbox.css('top'))
+		if (bool) {
+			return (ptopt - tboxH + 20)
+		} else {
+			return (ptopt + tboxH - 20)
+		}
+	}
+
+	function reSet () {
+		pbox.empty()
+		pbox.css({'top': '0px'})
+	}
+
+	function nextPage () {
+		var data = {
+			'an': articleName,
+			'cn': chapterNumber
+		}
+		reSet()
+		$.ajax({
+			type: 'POST',
+			url:'./a',
+			data: data,
+			success: function (data) {
+
+				var htmlString = ''
+				data.dataArray.forEach(function (v) {
+					htmlString += '<p>' + v + '</p>'
+				})
+				pbox.html(htmlString)
+
+				resetH()
+			}
+		})
+	}
+
+	previousBtn.click( function () {
+		move(false)
+	})
+
+	nextBtn.click( function () {
+		move(true)
+	})
+
+</script>
+</html>

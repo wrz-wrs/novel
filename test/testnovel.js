@@ -3,8 +3,8 @@ const novel = require('../models/novel')
 
 var cc = async function() {
 	try	{
-		// var s = await novel.init('http://www.biqugezw.com/9_9767/', '放开那个女巫')
-		var s = await novel.init('http://www.23us.so/files/article/html/15/15610/index.html', '某御坂妹')
+		await novel.init('http://www.23us.so/files/article/html/14/14220/index.html', '放开那个女巫')
+		await novel.init('http://www.23us.so/files/article/html/15/15610/index.html', '某御坂妹')
 		// console.log(s)
 	} catch (err) {
 		console.log(err)

@@ -6,26 +6,21 @@ const conf = require('../conf')
 const gethtml = require('./_get')
 const website = require('./website')
 
-class getChapter {
+class getChapter extends website{
 
 	constructor() {
-        // super()
+        super()
 	}
 
 	async init (url) {
 		
-		url = website.autoChangeSite(url)
-		let site = website.analysisUrl(url)
-		let code = website.getCode(site)
+		this._init2(url)
 
-		if (site) {
-
-			let chapterContent = await gethtml.getBody(url, code)
-
-			let chapterJson = website.analysisContent(site, chapterContent)
+		if (this.siteName) {
+			let chapterContent = await this._gethtml()
+			let chapterJson = this.analysisContent(chapterContent)
 
 			return chapterJson
-
 		}
 	}
 
