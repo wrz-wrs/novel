@@ -12,10 +12,14 @@
 				<p class="text-info">You want see what? submit it to us.</p>
 			</div>
 			<div class="col-md-12">
-				<form action="/post" method="post">
+				<form action="./api/post" method="post">
 					<div class="form-group">
 						<label for="exampleInputEmail1">Name</label>
 						<input type="text" class="form-control" name="an" placeholder="Name">
+					</div>
+					<div class="form-group">
+						<label for="exampleInputEmail1">Url</label>
+						<input type="text" class="form-control" name="url" placeholder="Name">
 					</div>
 					<button type="submit" class="btn btn-default" style="display: block;margin: 0px auto; ">Ok</button>
 				</form>

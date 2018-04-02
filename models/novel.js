@@ -47,6 +47,12 @@ class Novel extends Website{
 		}
 	}
 
+	create (nn) {
+		this._init3('23us')
+
+		this.search(nn)
+	}
+
 	saveJson (json = {}, name = 'default') {
 
 		let _json = {

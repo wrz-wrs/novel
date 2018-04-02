@@ -1,50 +1,34 @@
 const router = require('koa-router')()
+const novel = require('../../models/novel')
 
-// const chapter = require('../models/chapter')
+const chapter = require('../../models/chapter')
 
 // select novel
 router.get('/', async (ctx) => {
 
-	let novelname = ctx.request.query.an
+	try {
+		let novelname = ctx.request.query.an
+		let chapterNumber = ctx.request.query.cn
+		let json = chapter.load(novelname)
+		let title = json.novjson[chapterNumber].serial
+		let chapterUrl = json.novjson[chapterNumber].url
 
-	let result = jsonPackage({name: novelname})
-	if (!novelname) {
-		result.status = 400
-		result.errmsg = 'argument is err'
-		delete result.data
-		ctx.body = result
-	} else {
-		ctx.body = result
+		let content = await chapter.init(chapterUrl)
+		let res = jsonPackage({'title': title, content: content.dataArray})
+		if (!novelname) {
+			res.status = 400
+			res.errmsg = 'argument is err'
+			delete res.data
+			ctx.body = res
+		} else {
+			ctx.body = res
+		}
+	} catch (e) {
+		console.log(e)
+		ctx.body = e
 	}
 })
 
-
-
-
-// create novel
-router.post('/', async (ctx) => {
-	
-	let novelname = ctx.request.body.an
-
-	ctx.body = jsonPackage({name:'kkk'})
-})
-
-// update novel
-router.put('/', async (ctx) => {
-	ctx.body = jsonPackage({name:'kkk'})
-})
-
-// delete novel
-router.delete('/', async (ctx) => {
-	ctx.body = jsonPackage({name:'kkk'})
-})
-
-function hasSite(novelname) {
-	return new Promise( function (resolve, reject) {
-
-		resolve('')
-	})
-}
 
 function jsonPackage(arg) {
 	var json = {

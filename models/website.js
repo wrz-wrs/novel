@@ -70,6 +70,8 @@ const us23 = {
 
 	host: 'http://www.23us.so',
 
+	search: 'http://zhannei.baidu.com/cse/search?s=8053757951023821596&q=22222',
+
 	analysisChapter: function (content) {
 
 		const $ = cheerio.load(content)
@@ -89,6 +91,18 @@ const us23 = {
 		})
 
 		return json
+	},
+
+	analysisSearchUrlScode: function (html) {
+
+		let $ = cheerio.load(html)
+		$('#articlesearch li input').each( function (i, elem) {
+
+			console.log(elem)
+			
+		})
+		console.log('???????')
+
 	},
 
 	analysisContent: function (content) {
@@ -117,10 +131,10 @@ const us23 = {
 class Website {
 	constructor () {
 		this.site = {
-			'biqugezw': biqugezw,
 			'23us': us23,
+			'biqugezw': biqugezw,
 		}
-		this.siteName = ''
+		this.siteName = '' // 23us || biqugezw
 		this.code = ''
 		this.url = ''
 		this.content = ''
@@ -154,12 +168,29 @@ class Website {
 				})
 			})
 		})
+
+
+		// request
+		// 	.get(this.url)
 	}
+
+	// http://zhannei.baidu.com/cse/search?s=8053757951023821596&q=www
+
+	/*
+	*
+	* @param nn string (novel name)
+	*/
+	async search (nn) {
+		let html = await this._gethtml(this.site[this.siteName].host)
+		console.log(html)
+		let Scode = this.site[this.siteName].analysisSearchUrlScode(html)
+	}
+
 
 	_init (paramurl) {
 		this.url = paramurl
 		this.siteName = this._analysisUrl(this.url)
-		this.code = this._getCode(this.siteName)
+		this.code = this.site[this.siteName].code
 
 		console.log(this.url)
 	}
@@ -167,8 +198,14 @@ class Website {
 	_init2 (paramurl) {
 		this.url = paramurl
 		this.siteName = this._analysisUrl(paramurl)
-		this.code = this._getCode(this.siteName)
+		this.code = this.site[this.siteName].code
 		// return this.code
+	}
+
+	_init3 (_site) {
+		this.url = this.site[_site].host
+		this.siteName = _site
+		this.code = this.site[this.siteName].code
 	}
 
 	analysisChapter (content) {
