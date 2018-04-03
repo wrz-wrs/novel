@@ -14,6 +14,9 @@
     "koa-router": "^7.4.0",
     "koa-static": "^4.0.2",
     "koa-views": "^6.1.4",
+    "sequelize": "^4.37.5",
+    "sqlite": "^2.9.1",
+    "sqlite3": "^4.0.0",
     "superagent": "^3.8.2"
   },
   "repository": {

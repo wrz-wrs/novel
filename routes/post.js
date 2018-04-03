@@ -1,4 +1,5 @@
 const router = require('koa-router')()
+// const 
 
 router.get('/', async (ctx) => {
 	await ctx.render('post', {})
