@@ -29,7 +29,7 @@ app.use(bodyParser())
 
 app.use(router.routes()).use(router.allowedMethods())
 
-app.listen(3000)
+app.listen(conf.port)
 
 app.on('error', async function (err, ctx) {
 	// await ctx.render('error',{error: err})
