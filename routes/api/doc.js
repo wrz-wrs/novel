@@ -1,29 +1,22 @@
 const router = require('koa-router')()
 const h = require('../../conf').h
-const novel = require('../../models/novel')
 
 // select novel
-router.get('/', async (ctx) => {
-	try {
-		
-		let o = jsonPackage({})
-		delete o.data
-		ctx.body = o
-	} catch (e) {
-		ctx.body = e
-	}
-})
+// router.get('/', async (ctx) => {
+// 	ctx.body = jsonPackage({name:'kkk'})
+// })
 
 // create novel
-router.post('/', async (ctx) => {
+router.get('/', async (ctx) => {
 	
 	try	{
-		let novelname = ctx.request.body.an
-		let url = ctx.request.body.url
-		let o = await novel.init(url, novelname)
-		let res = jsonPackage({})
-		res.data = o
-		ctx.body = res
+		
+		let o = {
+			'create': `${h}`,
+			'novelInfo': `${h}/api/novel?an=放开那个女巫`,
+			'novelChapter': `${h}/api/novel?an=放开那个女巫&cn=1`,
+		}
+		ctx.body = o
 
 	} catch (err) {
 		console.log(err)
@@ -31,6 +24,7 @@ router.post('/', async (ctx) => {
 	}
 })
 
+/*
 function jsonPackage(arg) {
 	var json = {
 		status: 400,
@@ -41,10 +35,8 @@ function jsonPackage(arg) {
 			author: '',
 			timeStamp: '',
 		},
-		doclink: `${h}/api/doc`,
-		example: [
-				`${h}/api/post?an=放开那个女巫&url=http://www.23us.so/files/article/html/14/14220/index.html`,
-			],
+		doclink: 'http://127.0.0.1',
+		example: 'http://127.0.0.1',
 	}
 
 	if ((typeof arg) != 'object') {
@@ -58,6 +50,6 @@ function jsonPackage(arg) {
 	}
 	return json
 }
-
+*/
 
 module.exports = router

@@ -40,10 +40,12 @@ class Novel extends Website{
 
 			let chaptersHtml = await this._gethtml()
 			let chaptersJson = this.analysisChapter(chaptersHtml)
-			this.saveJson(chaptersJson, novelName)
-			
+			this.saveJson(chaptersJson, novelName, url)
+			// callback()
+			return '创建成功'
 		} else {
 			console.log(`24小时后更新...`)
+			return '24小时后更新...'
 		}
 	}
 
@@ -53,10 +55,13 @@ class Novel extends Website{
 		this.search(nn)
 	}
 
-	saveJson (json = {}, name = 'default') {
+	saveJson (json = {}, name = 'default', website) {
 
 		let _json = {
 			updateTime: this.time(),
+			name: name,
+			website: website,
+			author: '',
 			novjson: json,
 		}
 

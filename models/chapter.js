@@ -3,10 +3,9 @@ const cheerio = require('cheerio')
 const fs = require('fs')
 
 const conf = require('../conf')
-const gethtml = require('./_get')
-const website = require('./website')
+const Website = require('./website')
 
-class getChapter extends website{
+class getChapter extends Website{
 
 	constructor() {
         super()
@@ -21,6 +20,8 @@ class getChapter extends website{
 			let chapterJson = this.analysisContent(chapterContent)
 
 			return chapterJson
+		} else {
+			throw new Error('无法解析')
 		}
 	}
 
