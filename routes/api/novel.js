@@ -1,26 +1,48 @@
 const router = require('koa-router')()
-const novel = require('../../models/novel')
 
+const h = require('../../conf').h
+const novel = require('../../models/novel')
 const chapter = require('../../models/chapter')
 
 // select novel
 router.get('/', async (ctx) => {
-
 	try {
+
 		let novelname = ctx.request.query.an
 		let chapterNumber = ctx.request.query.cn
-		let json = chapter.load(novelname)
-		let title = json.novjson[chapterNumber].serial
-		let chapterUrl = json.novjson[chapterNumber].url
+		let res = {}
 
-		let content = await chapter.init(chapterUrl)
-		let res = jsonPackage({'title': title, content: content.dataArray})
 		if (!novelname) {
 			res.status = 400
 			res.errmsg = 'argument is err'
 			delete res.data
 			ctx.body = res
 		} else {
+
+			let json = chapter.load(novelname)
+			let name = json.name
+			let website = json.website
+			let author = json.author
+			let timeStamp = json.updateTime
+			let o = {
+				timeStamp,
+				name,
+				website,
+				author,
+			}
+
+			if (chapterNumber) {
+
+				o.title = json.novjson[chapterNumber].serial
+				let chapterUrl = json.novjson[chapterNumber].url
+				o.content = await chapter.init(chapterUrl)
+
+			} else {
+				o.content = json.novjson
+			}
+
+			res = jsonPackage(o)
+			res.example = `${h}/api/novel?an=放开那个女巫&cn=1`
 			ctx.body = res
 		}
 	} catch (e) {
@@ -35,15 +57,18 @@ function jsonPackage(arg) {
 		status: 400,
 		errmsg: '',
 		data:{
+			timeStamp: '',
 			name: '',
 			website: '',
 			author: '',
 			title: '',
 			content: [],
-			timeStamp: '',
 		},
-		doclink: 'http://127.0.0.1',
-		example: 'http://127.0.0.1',
+		doclink: `${h}/api/doc`,
+		example: [
+				`${h}/api/novel?an=放开那个女巫`,
+				`${h}/api/novel?an=放开那个女巫&cn=1`
+			],
 	}
 
 	if ((typeof arg) != 'object') {

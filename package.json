@@ -1,6 +1,6 @@
 {
   "name": "novel",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "novel crawler",
   "main": "index.js",
   "dependencies": {
@@ -15,6 +15,10 @@
     "koa-static": "^4.0.2",
     "koa-views": "^6.1.4",
     "superagent": "^3.8.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zimulili/novel.git"
   },
   "devDependencies": {},
   "scripts": {
