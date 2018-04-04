@@ -45,9 +45,30 @@ router.get('/', async (ctx) => {
 			res.example = `${h}/api/novel?an=放开那个女巫&cn=1`
 			ctx.body = res
 		}
-	} catch (e) {
-		console.log(e)
-		ctx.body = e
+	} catch (err) {
+		console.log(err)
+		ctx.body = err.message
+	}
+})
+
+router.get('/search', async (ctx) => {
+	try {
+		let res = {}
+		let an = ctx.request.query.an
+		if (an) {
+			let result = await novel.search(an)
+			res = jsonPackage({result})
+			ctx.body = res
+		} else {
+			res = jsonPackage()
+			res.status = 404
+			res.errmsg = 'argument an is null'
+			ctx.body = res
+		}
+
+	} catch (err) {
+		console.log(err)
+		ctx.body = err.message
 	}
 })
 
@@ -57,12 +78,12 @@ function jsonPackage(arg) {
 		status: 400,
 		errmsg: '',
 		data:{
-			timeStamp: '',
-			name: '',
-			website: '',
-			author: '',
-			title: '',
-			content: [],
+			// timeStamp: '',
+			// name: '',
+			// website: '',
+			// author: '',
+			// title: '',
+			// content: [],
 		},
 		doclink: `${h}/api/doc`,
 		example: [
@@ -72,7 +93,7 @@ function jsonPackage(arg) {
 	}
 
 	if ((typeof arg) != 'object') {
-		throw new Error('argument is not json')
+		// throw new Error('argument is not json')
 	} else {
 		for(var key in arg) {
 			json.data[key] = arg[key]

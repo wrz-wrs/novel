@@ -3,10 +3,10 @@ const novel = require('../models/novel')
 
 var cc = async function() {
 	try	{
-		await novel.init('http://www.23us.so/files/article/html/14/14220/index.html', '放开那个女巫')
+		// await novel.init('http://www.23us.so/files/article/html/14/14220/index.html', '放开那个女巫')
 		// await novel.init('http://www.23us.so/files/article/html/15/15610/index.html', '某御坂妹')
 		// console.log(s)
-		// novel.create('222')
+		console.log(await novel.search('放开那个女巫'))
 	} catch (err) {
 		console.log(err)
 	}

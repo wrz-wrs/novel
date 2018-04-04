@@ -12,6 +12,7 @@ router.get('/', async (ctx) => {
 	try	{
 		
 		let o = {
+			'search': `${h}/api/novel/search?an=放开那个女巫`,
 			'create': `${h}`,
 			'novelInfo': `${h}/api/novel?an=放开那个女巫`,
 			'novelChapter': `${h}/api/novel?an=放开那个女巫&cn=1`,

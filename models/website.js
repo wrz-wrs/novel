@@ -70,7 +70,7 @@ const us23 = {
 
 	host: 'http://www.23us.so',
 
-	search: 'http://zhannei.baidu.com/cse/search?s=8053757951023821596&q=22222',
+	search: 'http://zhannei.baidu.com/cse/search?s=8053757951023821596&q=',
 
 	analysisChapter: function (content) {
 
@@ -93,16 +93,36 @@ const us23 = {
 		return json
 	},
 
-	analysisSearchUrlScode: function (html) {
+	analysisSearchResults: function (html) {
 
 		let $ = cheerio.load(html)
-		$('#articlesearch li input').each( function (i, elem) {
+		let resultsPic = []
+		let results = []
 
-			console.log(elem)
-			
+		$('#results .result-list .result-game-item .result-game-item-pic').each( function (i, elem) {
+
+			let cover = $(this).children().children().attr('src')
+			let novelIndexUrl = $(this).children().attr('href')
+
+			resultsPic.push({
+				novelIndexUrl,
+				cover,
+			})
 		})
-		console.log('???????')
 
+		$('#results .result-list .result-game-item .result-game-item-detail').each( function (i, elem) {
+			let title = $(this).children('.result-game-item-title').children('a').attr('title')
+			let author = $(this).children('.result-game-item-info').children('p').first().children('span').last().text()
+			author = author.replace(/\s+/g, "")
+			results.push({
+				title,
+				author,
+				cover: resultsPic[i].cover,
+				novelIndexUrl: resultsPic[i].novelIndexUrl,
+			})
+		})
+
+		return results
 	},
 
 	analysisContent: function (content) {
@@ -180,10 +200,12 @@ class Website {
 	*
 	* @param nn string (novel name)
 	*/
-	async search (nn) {
-		let html = await this._gethtml(this.site[this.siteName].host)
-		console.log(html)
-		let Scode = this.site[this.siteName].analysisSearchUrlScode(html)
+	async _search (nn) {
+		this.url += nn
+		this.url = encodeURI(this.url)
+		let html = await this._gethtml()
+		let result = this.site[this.siteName].analysisSearchResults(html)
+		return result
 	}
 
 
@@ -203,7 +225,7 @@ class Website {
 	}
 
 	_init3 (_site) {
-		this.url = this.site[_site].host
+		this.url = this.site[_site].search
 		this.siteName = _site
 		this.code = this.site[this.siteName].code
 	}

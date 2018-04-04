@@ -1,11 +1,24 @@
 const router = require('koa-router')()
 const h = require('../../conf').h
 const novel = require('../../models/novel')
+const noveldao = require('../../models/dao/noveldao')
 
 // select novel
 router.get('/', async (ctx) => {
 	try {
-		
+		let name = ctx.request.body.an
+		let author = ctx.request.body.author
+		let cover = ctx.request.body.cover
+		let source = ctx.request.body.source
+		if (!name || !source) {
+
+		} else {
+
+			let json = {name,author,cover,source,}
+			__create(json)
+		}
+
+
 		let o = jsonPackage({})
 		delete o.data
 		ctx.body = o
@@ -16,13 +29,19 @@ router.get('/', async (ctx) => {
 
 // create novel
 router.post('/', async (ctx) => {
-	
 	try	{
-		let novelname = ctx.request.body.an
-		let url = ctx.request.body.url
-		let o = await novel.init(url, novelname)
-		let res = jsonPackage({})
-		res.data = o
+		let name = ctx.request.body.an
+		let author = ctx.request.body.author
+		let cover = ctx.request.body.cover
+		let source = ctx.request.body.source
+		if (!name || !source) {
+
+		} else {
+
+			let json = {name,author,cover,source,}
+			__create(json)
+		}
+
 		ctx.body = res
 
 	} catch (err) {
@@ -30,6 +49,17 @@ router.post('/', async (ctx) => {
 		ctx.body = err
 	}
 })
+
+/*
+* json{name,author,cover,source,} **must
+*/
+async function __create (json) {
+	// 创建json文件
+	let o = await init(json.source, json.name) 
+	//写入数据库
+	await noveldao.create(json)
+
+}
 
 function jsonPackage(arg) {
 	var json = {

@@ -1,4 +1,6 @@
 const c = {
+	sqlite: __dirname + '/db/database.sqlite',
+	
 	save_novjson_path : __dirname + '/novs',
 
 	h:'http://localhost:3000',

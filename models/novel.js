@@ -49,10 +49,18 @@ class Novel extends Website{
 		}
 	}
 
-	create (nn) {
+	async search (nn) {
 		this._init3('23us')
 
-		this.search(nn)
+		let result = await this._search(nn)
+
+		return result
+	}
+
+	saveHtml (content, name = 'default') {
+		console.log(content)
+		let path = conf.save_novjson_path
+		fs.writeFileSync(`${path}/${name}.html`, content.toString())
 	}
 
 	saveJson (json = {}, name = 'default', website) {
