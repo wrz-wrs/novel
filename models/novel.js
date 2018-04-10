@@ -65,19 +65,27 @@ class Novel extends Website{
 
 	saveJson (json = {}, name = 'default', website) {
 
-		let _json = {
-			updateTime: this.time(),
-			name: name,
-			website: website,
-			author: '',
-			novjson: json,
+		try	{
+			let _json = {
+				updateTime: this.time(),
+				name: name,
+				website: website,
+				author: '',
+				novjson: json,
+			}
+
+			let path = conf.save_novjson_path
+
+			console.log(`saveJson method param----path:${path}`)
+
+			if (!fs.existsSync(`${path}/${name}/`)) {
+				fs.mkdirSync(`${path}/${name}/`)
+			}
+
+			fs.writeFileSync(`${path}/${name}/index.json`, JSON.stringify(_json))
+		} catch (err) {
+			throw new Error(err.message)
 		}
-
-		let path = conf.save_novjson_path
-
-		console.log(`saveJson method param----path:${path}`)
-
-		fs.writeFileSync(`${path}/${name}.json`, JSON.stringify(_json))
 	}
 
 	time () {
@@ -130,9 +138,9 @@ class Novel extends Website{
 
 		let path = conf.save_novjson_path
 
-		let fliepath = `${path}/${filename}.json`
+		let fliepath = `${path}/${filename}/index.json`
 
-		if (fs.existsSync(`${path}/${filename}.json`)) {
+		if (fs.existsSync(fliepath)) {
 
 			let json = fs.readFileSync(fliepath)
 

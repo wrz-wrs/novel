@@ -1,46 +1,40 @@
 const Model = require('../db/model')
 
-class UserDao {
+class TagsDao {
 	constructor () {
 		// super()
 	}
 
-	async create (nickname, password) {
-		await Model.User.create({
-			nickname,
-			password,//加密？
-		})
+	async create (arg) {
+		await Model.Tags.create(arg)
 	}
 
-	async update () {
-		// await Model.User.
-	}
 
 	async findOne (arg) {
 		try {
 
-			let user = {}
+			let tag = {}
 			if (typeof arg == 'string') {
-				let nickname = arg
-				user = await Model.User.findOne({
+				let tagname = arg
+				tag = await Model.Tags.findOne({
 					where: {
-						nickname,
+						tagname,
 					},
 					// attributes: ['nickname','password'],
 				})
 			}
 			if (typeof arg == 'number') {
 				let id = arg
-				user = await Model.User.findOne({
+				tag = await Model.Tags.findOne({
 					where: {
 						id,
 					}
 				})
 			}
-			if (!user) {
+			if (!tag) {
 				return {}
 			} else {
-				return user.dataValues
+				return tag.dataValues
 			}
 		} catch (e) {
 			console.log(e)
@@ -50,25 +44,25 @@ class UserDao {
 
 	//////////
 	async findOneByID (id) {
-		let user = await Model.User.findOne({
+		let tag = await Model.Tags.findOne({
 			where: {
 				id,
 			}
 		})
-		return user.dataValues
+		return tag.dataValues
 	}
 
 	async findAll () {
-		let users = await Model.User.findAll({
+		let tags = await Model.Tags.findAll({
 			// attributes: ['nickname','password']
 		})
 
 		let result = []
-		for(let key in users) {
-			result.push(users[key].dataValues)
+		for(let key in tags) {
+			result.push(tags[key].dataValues)
 		}
 		return result
 	}
 }
 
-module.exports = new UserDao()
+module.exports = new TagsDao()

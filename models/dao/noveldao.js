@@ -38,7 +38,7 @@ class NovelDao {
 				})
 			}
 			if (!novel) {
-				return {}
+				return null
 			} else {
 				return novel.dataValues
 			}

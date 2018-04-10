@@ -27,8 +27,9 @@ const User = sequelize.define('users', {
 	info: {
 		type: Sequelize.STRING
 	},
-	createdAt: Sequelize.DATE,
-	updatedAt: false,
+	createdTime: Sequelize.DATE
+}, {
+	timestamps: false
 })
 
 
@@ -52,8 +53,40 @@ const Novel = sequelize.define('novels', {
 	source: {
 		type: Sequelize.STRING,
 	},
+	type:{
+		type: Sequelize.STRING,
+	},
 	isbn: {
 		type: Sequelize.STRING,
+	}
+})
+
+const Tags = sequelize.define('tags', {
+	id: {
+		type: Sequelize.INTEGER,
+		primaryKey: true,
+		allowNull: false,
+		autoIncrement: true
+	},
+	tagname: {
+		type: Sequelize.INTEGER,
+		allowNull: false,
+	},
+	novelid: {
+		type: Sequelize.INTEGER,
+		allowNull: false,
+		references: {
+			model: Novel,
+			key: 'id'
+		}
+	},
+	userid: {
+		type: Sequelize.INTEGER,
+		allowNull: false,
+		references: {
+			model: User,
+			key: 'id'
+		}
 	}
 })
 
@@ -80,6 +113,13 @@ const History = sequelize.define('historys', {
 			key: 'id'
 		}
 	},
+	tagsid: {
+		type: Sequelize.INTEGER,
+		references: {
+			model: Tags,
+			key: 'id'
+		}
+	},
 	novel: {
 		type: Sequelize.STRING,
 		allowNull: false
@@ -96,11 +136,12 @@ const History = sequelize.define('historys', {
 // History.sync({force: true})
 
 // 同步所有尚未在数据库中的模型
-sequelize.sync()
+// sequelize.sync()
 
 const Model = {
 	User,
 	History,
 	Novel,
+	Tags,
 }
 module.exports = Model
