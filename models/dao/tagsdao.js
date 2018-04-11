@@ -6,7 +6,25 @@ class TagsDao {
 	}
 
 	async create (arg) {
-		await Model.Tags.create(arg)
+		try	{
+			await Model.Tags.create(arg)
+		} catch (err) {
+			console.log(err.message)
+			throw new Error(err.message)
+		}
+	}
+
+
+	async findOrCreate (arg) {
+		try {
+			if ((typeof arg) != 'object') {
+				throw new Error(`class Tags->findOrCreate @param is not json`)
+			} else {
+				await Model.Tags.findOrCreate({where: arg})
+			}
+		} catch (err) {
+			throw new Error(err.message)
+		}
 	}
 
 
@@ -32,12 +50,12 @@ class TagsDao {
 				})
 			}
 			if (!tag) {
-				return {}
+				throw new Error(`${arg} not find`)
 			} else {
 				return tag.dataValues
 			}
-		} catch (e) {
-			console.log(e)
+		} catch (err) {
+			throw new Error(err.message)
 		}
 
 	}
@@ -52,10 +70,31 @@ class TagsDao {
 		return tag.dataValues
 	}
 
-	async findAll () {
-		let tags = await Model.Tags.findAll({
-			// attributes: ['nickname','password']
+	async findOneByName (name) {
+		let tag = await Model.Tags.findOne({
+			where: {
+				tagname: name
+			}
 		})
+		return tag.dataValues
+	}
+
+	async findAll (...arg) {
+		let tags = {}
+		if (arg[0] == '') {
+			tags = await Model.Tags.findAll({
+				limit: arg[1],
+				offset: arg[2],
+			})
+		} else {
+			tags = await Model.Tags.findAll({
+				where: {
+					tagname: arg[0],
+				},
+				limit: arg[1],
+				offset: arg[2],
+			})
+		}
 
 		let result = []
 		for(let key in tags) {

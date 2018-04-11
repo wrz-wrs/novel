@@ -13,13 +13,11 @@ router.get('/create', async (ctx) => {
 			await userdao.create(nickname, password)
 			ctx.body = jsonPackage({})
 		} else {
-			let res = {}
-			res = jsonPackage(res)
-			res.errmsg = 'check un || ps'
-			ctx.body = res
+			throw new Error('check params @ un || ps')
 		}
 	} catch (err) {
-		let res = jsonPackage(res)
+		let res = {}
+		res = jsonPackage(res)
 		res.status = 500
 		res.errmsg = err.message
 		ctx.body = res

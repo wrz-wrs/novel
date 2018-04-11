@@ -113,10 +113,15 @@ const us23 = {
 		$('#results .result-list .result-game-item .result-game-item-detail').each( function (i, elem) {
 			let title = $(this).children('.result-game-item-title').children('a').attr('title')
 			let author = $(this).children('.result-game-item-info').children('p').first().children('span').last().text()
+			let type = $(this).children('.result-game-item-info').children('p').eq(1).children('span').last().text()
+
 			author = author.replace(/\s+/g, "")
+			type = type.replace(/\s+/g, "")
+			console.log(type)
 			results.push({
 				title,
 				author,
+				type,
 				cover: resultsPic[i].cover,
 				novelIndexUrl: resultsPic[i].novelIndexUrl,
 			})

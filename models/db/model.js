@@ -44,6 +44,9 @@ const Novel = sequelize.define('novels', {
 		type: Sequelize.STRING,
 		allowNull: false,
 	},
+	ntype: {
+		type: Sequelize.STRING,
+	},
 	cover: {
 		type: Sequelize.STRING,
 	},
@@ -133,7 +136,7 @@ const History = sequelize.define('historys', {
 // 创建history表
 // History.sync()
 // 强制同步模型
-// History.sync({force: true})
+// sequelize.sync({force: true})
 
 // 同步所有尚未在数据库中的模型
 // sequelize.sync()

@@ -62,15 +62,10 @@ router.get('/search', async (ctx) => {
 			res = jsonPackage({result})
 			ctx.body = res
 		} else {
-			res = jsonPackage()
-			res.status = 404
-			res.errmsg = 'argument an is null'
-			ctx.body = res
+			throw new Error('argument an is null')
 		}
-
 	} catch (err) {
-		console.log(err)
-		ctx.body = err.message
+		await err_res(err, ctx)
 	}
 })
 
@@ -93,17 +88,12 @@ router.get('/create', async (ctx) => {
 		} else {
 			res = jsonPackage(res)
 			res.status = 404
-			res.errmsg = 'check @param an||author||cover||index'
+			res.errmsg = 'check @params an||author||cover||index'
 			res.example = createExample
 			ctx.body = res
 		}
 	} catch (err) {
-		let res = {}
-		res = jsonPackage(res)
-		res.status = 500
-		res.errmsg = err.message
-		res.example = createExample
-		ctx.body = res
+		await err_res(err, ctx)
 	}
 })
 
@@ -112,28 +102,49 @@ router.get('/tags', async (ctx) => {
 		let res = {}
 		let novelid = ctx.request.query.novelid
 		let tagname = ctx.request.query.tagname
-		let userid = ctx.request.query.userid //*******************************************************
+		let userid = ctx.request.query.userid
 
 		if (novelid && tagname && userid) {
 			let _tag = {tagname, novelid, userid}
 			// ***** create tags
-			tagsdao.create(_tag)
+			await tagsdao.findOrCreate(_tag)
 			res = jsonPackage(res)
 			res.example = tagsExample
 			ctx.body = res
 		} else {
 			res = jsonPackage(res)
 			res.status = 404
-			res.errmsg = 'check @param tagname||novelid||userid'
+			res.errmsg = 'check @params tagname||novelid||userid'
 			res.example = tagsExample
 			ctx.body = res
 		}
 	} catch (err) {
-		let res = jsonPackage(res)
-		res.status = 404
-		res.errmsg = err.message
-		res.example = tagsExample
+		await err_res(err, ctx)
+	}
+})
+
+router.get('/searchTag', async (ctx) => {
+	try {
+		// throw new Error('??????')
+		let res = {}
+		let tagname = ctx.request.query.tagname
+		let limit = ctx.request.query.limit
+		let offset = ctx.request.query.offset
+		console.log(typeof tagname)
+		if (tagname && limit && offset) {
+			res = await tagsdao.findAll(tagname, limit, offset)
+		}
+		if (!tagname && limit && offset) {
+			res = await tagsdao.findAll('', limit, offset)
+		}
+		if (!tagname && !limit && !offset) {
+			throw new Error('must need params limit and offset')
+		}
+		res = jsonPackage(res)
+		res.example = ''
 		ctx.body = res
+	} catch (err) {
+		await err_res(err, ctx)
 	}
 })
 
@@ -173,5 +184,13 @@ function jsonPackage(arg) {
 	return json
 }
 
+async function err_res (err, ctx) {
+	let res = {}
+	res = jsonPackage(res)
+	res.status = 404
+	res.errmsg = err.message
+	res.example = tagsExample
+	ctx.body = res
+}
 
 module.exports = router
