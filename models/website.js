@@ -140,7 +140,7 @@ const us23 = {
 
 		contentList.forEach(function (v) {
 			if (v != '') {
-				newContent.push(v)
+				newContent.push(entities.decodeXML(v))
 			}
 		})
 
@@ -170,7 +170,9 @@ class Website {
 		let code = this.code
 		return new Promise( function (resolve, reject) {
 			var body = ''
-			console.log(url)
+			console.log('\n\n\n')
+			console.log(`解析url：${url}`)
+			console.log('\n\n\n')
 			http.get(url, function (res) {
 				var chunks = []
 				res.on('data', function(chunk){
@@ -245,6 +247,7 @@ class Website {
 
 	_analysisUrl (host) {
 		try	{
+			console.log(host)
 			host = (host.match(/www\.(.*?)\./gi))[0]  // return www.***.
 			host = host.replace(/www\./gi, '').replace(/\./gi, '')
 
@@ -256,6 +259,7 @@ class Website {
 				return false
 			}
 		} catch (err) {
+			console.log('?????????????????????')
 			console.log(err)
 		}
 	}

@@ -7,6 +7,11 @@ const Website = require('./website')
 const noveldao = require('./dao/noveldao')
 const novel = require('./novel')
 
+/*
+* 1.检查文件是否存在
+* 2.
+*
+*/
 class getChapter extends Website{
 
 	constructor() {
@@ -22,7 +27,8 @@ class getChapter extends Website{
 			let chapterContent = await this._gethtml()
 			let chapterJson = this.analysisContent(chapterContent)
 			if (arg) {
-				this.__saveJson(arg[0], arg[1])
+				// arg存在时缓存文件
+				this.__saveJson(arg[0], arg[1], chapterJson)
 			}
 			return chapterJson
 		} else {
@@ -35,18 +41,22 @@ class getChapter extends Website{
 		if (!a) {
 			throw new Error('class: Chapter->method: _load->select 0')
 		} else {
-			let content = read(name, num)
+
+			// 服务器是否已经有缓存文件
+			let content = this.__read(name, num)
 			if (content) {
+				console.log('缓存文件')
 				return content
 			} else {
-				let chas = this.load(name)
+				let chas = this.__load(name)
 				let url = chas.novjson[num].url
-				return this.init(url, )
+				console.log(url+'??????????/')
+				return this.init(url, name, num)
 			}
 		}
 	}
 
-	load (novelName) {
+	__load (novelName) {
 
 		let path = conf.save_novjson_path
 
@@ -67,7 +77,7 @@ class getChapter extends Website{
 
 		let path = conf.save_novjson_path
 		let _num = parseInt(num / 100)
-		let _remainder = num % 100
+		// let _remainder = num % 100
 
 		let filepath = `${path}/${novelName}/${_num.toString()}.json`
 		let content = {}
@@ -75,22 +85,13 @@ class getChapter extends Website{
 			content = require(filepath)
 			content[num] = txt
 		} else {
-			if (_num < 1) {
-				for (let i = 1; i < num; i++) {
-					content[i] = ""
-				}
-			} else {
-				for (let i = 1; i < _remainder; i++) {
-					let n = _num * 100 + i
-					content[i] = ""
-				}
-			}
+			content[num] = txt
 		}
 		fs.writeFileSync(filepath, JSON.stringify(content))
 	}
 
 
-	read (novelName, num) {
+	__read (novelName, num) {
 		let path = conf.save_novjson_path
 		let _num = parseInt(num / 100)
 		let _remainder = num % 100

@@ -148,10 +148,30 @@ router.get('/searchTag', async (ctx) => {
 	}
 })
 
+router.get('/read', async (ctx) => {
+	try {
+		let res = {}
+		let an = ctx.request.query.an
+		let chaNum = ctx.request.query.cno
+		if (!an || !chaNum) {
+			throw new Error('@params')
+		} else {
+			// chapterContent => cc
+			let cc = await chapter._load(an, chaNum)
+			res = jsonPackage(cc)
+			ctx.body = res
+		}
+	} catch (err) {
+		await err_res(err, ctx, readExample1)
+	}
+})
+
 let createExample = `${h}`+
 '/api/novel/create?an=放开那个女巫&author=二目&cover=http://www.23us.so/files/article/image/14/14220/14220s.jpg&index=http://www.23us.so/files/article/html/14/14220/index.html';
 let tagsExample = `${h}`+
 '/api/novel/tags?novelid=1&tagname=魔法&userid=1'
+let readExample1 = `${h}`+
+'/api/novel/tags?novelid=1&tagname=放开那个女巫&cno=1'
 
 function jsonPackage(arg) {
 	var json = {
@@ -184,12 +204,16 @@ function jsonPackage(arg) {
 	return json
 }
 
-async function err_res (err, ctx) {
+async function err_res (err, ctx, ...arg) {
 	let res = {}
 	res = jsonPackage(res)
 	res.status = 404
 	res.errmsg = err.message
-	res.example = tagsExample
+	let example = []
+	for(let k in arg) {
+		example.push(arg[k])
+	}
+	res.example = example
 	ctx.body = res
 }
 

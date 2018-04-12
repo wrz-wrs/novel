@@ -83,16 +83,16 @@ class TagsDao {
 		let tags = {}
 		if (arg[0] == '') {
 			tags = await Model.Tags.findAll({
-				limit: arg[1],
-				offset: arg[2],
+				limit: arg[1] || 10,
+				offset: arg[2] || 0,
 			})
 		} else {
 			tags = await Model.Tags.findAll({
 				where: {
 					tagname: arg[0],
 				},
-				limit: arg[1],
-				offset: arg[2],
+				limit: arg[1] || 10,
+				offset: arg[2] || 0,
 			})
 		}
 
