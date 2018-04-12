@@ -6,7 +6,7 @@ class NovelDao {
 	}
 
 	/*
-	* @param info(json)
+	* @params info(json)
 	*/
 	async create (info) {
 		try {
@@ -21,17 +21,17 @@ class NovelDao {
 
 			let novel = {}
 			if (typeof arg == 'string') {
-				let nickname = arg
-				novel = await Model.User.findOne({
+				let name = arg
+				novel = await Model.Novel.findOne({
 					where: {
-						nickname,
+						name,
 					},
 					// attributes: ['nickname','password'],
 				})
 			}
 			if (typeof arg == 'number') {
 				let id = arg
-				novel = await Model.User.findOne({
+				novel = await Model.Novel.findOne({
 					where: {
 						id,
 					}

@@ -1,17 +1,17 @@
-const router = require('koa-router')()
+const router 	= require('koa-router')()
 
-const h = require('../../conf').h
-const novel = require('../../models/novel')
-const chapter = require('../../models/chapter')
-const noveldao = require('../../models/dao/noveldao')
-const tagsdao = require('../../models/dao/tagsdao')
+const h 		= require('../../conf').h
+const novel 	= require('../../models/novel')
+const chapter 	= require('../../models/chapter')
+const noveldao 	= require('../../models/dao/noveldao')
+const tagsdao 	= require('../../models/dao/tagsdao')
 
 // select novel
-router.get('/', async (ctx) => {
+router.get('/info', async (ctx) => {
 	try {
 
 		let novelname = ctx.request.query.an
-		let chapterNumber = ctx.request.query.cn
+		// let chapterNumber = ctx.request.query.cn
 		let res = {}
 
 		if (!novelname) {
@@ -21,30 +21,32 @@ router.get('/', async (ctx) => {
 			ctx.body = res
 		} else {
 
-			let json = chapter.load(novelname)
+			let json = await noveldao.findOne(novelname)
 			let name = json.name
-			let website = json.website
+			let source = json.source
 			let author = json.author
-			let timeStamp = json.updateTime
+			let cover = json.cover
+			let type = json.type
+			// let timeStamp = json.updateTime
 			let _o = {
-				timeStamp,
 				name,
-				website,
 				author,
+				cover,
+				type,
+				source,
 			}
 
-			if (chapterNumber) {
+			// if (chapterNumber) {
+			// 	_o.title = json.novjson[chapterNumber].serial
+			// 	let chapterUrl = json.novjson[chapterNumber].url
+			// 	_o.content = await chapter.init(chapterUrl)
 
-				_o.title = json.novjson[chapterNumber].serial
-				let chapterUrl = json.novjson[chapterNumber].url
-				_o.content = await chapter.init(chapterUrl)
-
-			} else {
-				_o.content = json.novjson
-			}
+			// } else {
+			// 	_o.content = json.novjson
+			// }
 
 			res = jsonPackage(_o)
-			res.example = `${h}/api/novel?an=放开那个女巫&cn=1`
+			res.example = `${h}/api/novel/info?an=放开那个女巫`
 			ctx.body = res
 		}
 	} catch (err) {
@@ -76,9 +78,10 @@ router.get('/create', async (ctx) => {
 		let author = ctx.request.query.author || '佚名'
 		let cover = ctx.request.query.cover
 		let source = ctx.request.query.index
+		let type = ctx.request.query.type
 
-		if (name && cover && source) {
-			let _o = {name, author, cover, source}
+		if (name && cover && source && type) {
+			let _o = {name, author, cover, source, type}
 			let _mes = await novel.init(source, name) // 保存chapters的json文件
 			await noveldao.create(_o) // 信息写入到数据库
 
@@ -88,7 +91,7 @@ router.get('/create', async (ctx) => {
 		} else {
 			res = jsonPackage(res)
 			res.status = 404
-			res.errmsg = 'check @params an||author||cover||index'
+			res.errmsg = '@params an||author||cover||index||type'
 			res.example = createExample
 			ctx.body = res
 		}
@@ -119,7 +122,7 @@ router.get('/tags', async (ctx) => {
 			ctx.body = res
 		}
 	} catch (err) {
-		await err_res(err, ctx)
+		await err_res(err, ctx, tagsExample)
 	}
 })
 
@@ -140,6 +143,7 @@ router.get('/searchTag', async (ctx) => {
 		if (!tagname && !limit && !offset) {
 			throw new Error('must need params limit and offset')
 		}
+
 		res = jsonPackage(res)
 		res.example = ''
 		ctx.body = res
@@ -154,7 +158,7 @@ router.get('/read', async (ctx) => {
 		let an = ctx.request.query.an
 		let chaNum = ctx.request.query.cno
 		if (!an || !chaNum) {
-			throw new Error('@params')
+			throw new Error('@params an chaNum')
 		} else {
 			// chapterContent => cc
 			let cc = await chapter._load(an, chaNum)
@@ -172,6 +176,8 @@ let tagsExample = `${h}`+
 '/api/novel/tags?novelid=1&tagname=魔法&userid=1'
 let readExample1 = `${h}`+
 '/api/novel/tags?novelid=1&tagname=放开那个女巫&cno=1'
+
+let readExample = `${h}`+'/api/novel/read?an=放开那个女巫&chaNum=1'
 
 function jsonPackage(arg) {
 	var json = {

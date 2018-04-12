@@ -57,6 +57,21 @@ class Novel extends Website{
 		return result
 	}
 
+	// info (novelName) {
+
+	// 	let path = conf.save_novjson_path
+	// 	let filepath = `${path}/${novelName}/index.json`
+
+	// 	if (fs.existsSync(filepath)) {
+
+	// 		let json = fs.readFileSync(filepath)
+	// 		json = JSON.parse(json)
+	// 		return json
+	// 	} else {
+	// 		throw new Error('class: Chapter->method: load->not find')
+	// 	}
+	// }
+
 	saveHtml (content, name = 'default') {
 		console.log(content)
 		let path = conf.save_novjson_path

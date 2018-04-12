@@ -116,17 +116,6 @@ const History = sequelize.define('historys', {
 			key: 'id'
 		}
 	},
-	tagsid: {
-		type: Sequelize.INTEGER,
-		references: {
-			model: Tags,
-			key: 'id'
-		}
-	},
-	novel: {
-		type: Sequelize.STRING,
-		allowNull: false
-	},
 	chapter: {
 		type: Sequelize.INTEGER,
 		allowNull: false

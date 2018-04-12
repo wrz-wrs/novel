@@ -48,7 +48,7 @@ class getChapter extends Website{
 				console.log('缓存文件')
 				return content
 			} else {
-				let chas = this.__load(name)
+				let chas = this.info(name)
 				let url = chas.novjson[num].url
 				console.log(url+'??????????/')
 				return this.init(url, name, num)
@@ -56,7 +56,7 @@ class getChapter extends Website{
 		}
 	}
 
-	__load (novelName) {
+	info (novelName) {
 
 		let path = conf.save_novjson_path
 
