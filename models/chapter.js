@@ -7,6 +7,51 @@ const Website = require('./website')
 const noveldao = require('./dao/noveldao')
 const novel = require('./novel')
 
+
+
+/*
+* private function
+*/
+function _saveJson (novelName, num, txt) {
+
+	let path = conf.save_novjson_path
+	let _num = parseInt(num / 100)
+	// let _remainder = num % 100let filepath = `${path}/${novelName}/${_num.toString()}.json`
+	let content = {}
+
+	if (fs.existsSync(filepath)) {
+		content = require(filepath)
+		content[num] = txt
+	} else {
+		content[num] = txt
+	}
+	fs.writeFileSync(filepath, JSON.stringify(content))
+}
+
+function _read (novelName, num) {
+
+	let path = conf.save_novjson_path
+	let _num = parseInt(num / 100)
+	let _remainder = num % 100
+	let filepath = `${path}/${novelName}/${_num.toString()}.json`
+	let content = {}
+
+	if (fs.existsSync(filepath)) {
+		content = require(filepath)
+		if (content[num] == '') {
+			return false
+		} else {
+			return content[num]
+		}
+	} else {
+		return false
+	}
+}
+
+/*
+* private function over
+*/
+
 /*
 * 1.检查文件是否存在
 * 2.
@@ -24,11 +69,11 @@ class getChapter extends Website{
 		this._init2(url)
 
 		if (this.siteName) {
-			let chapterContent = await this._gethtml()
+			let chapterContent = await this.gethtml()
 			let chapterJson = this.analysisContent(chapterContent)
 			if (arg) {
 				// arg存在时缓存文件
-				this.__saveJson(arg[0], arg[1], chapterJson)
+				_saveJson(arg[0], arg[1], chapterJson)
 			}
 			return chapterJson
 		} else {
@@ -43,7 +88,7 @@ class getChapter extends Website{
 		} else {
 
 			// 服务器是否已经有缓存文件
-			let content = this.__read(name, num)
+			let content = _read(name, num)
 			if (content) {
 				console.log('缓存文件')
 				return content
@@ -73,41 +118,6 @@ class getChapter extends Website{
 		}
 	}
 
-	__saveJson (novelName, num, txt) {
-
-		let path = conf.save_novjson_path
-		let _num = parseInt(num / 100)
-		// let _remainder = num % 100
-
-		let filepath = `${path}/${novelName}/${_num.toString()}.json`
-		let content = {}
-		if (fs.existsSync(filepath)) {
-			content = require(filepath)
-			content[num] = txt
-		} else {
-			content[num] = txt
-		}
-		fs.writeFileSync(filepath, JSON.stringify(content))
-	}
-
-
-	__read (novelName, num) {
-		let path = conf.save_novjson_path
-		let _num = parseInt(num / 100)
-		let _remainder = num % 100
-		let filepath = `${path}/${novelName}/${_num.toString()}.json`
-		let content = {}
-		if (fs.existsSync(filepath)) {
-			content = require(filepath)
-			if (content[num] == '') {
-				return false
-			} else {
-				return content[num]
-			}
-		} else {
-			return false
-		}
-	}
 }
 
 module.exports = new getChapter()

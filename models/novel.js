@@ -18,6 +18,102 @@ const options = {
 }
 
 
+/*
+* 下面的方法都是私有方法
+*
+*/
+function _saveHtml (content, name = 'default') {
+	console.log(content)
+	let path = conf.save_novjson_path
+	fs.writeFileSync(`${path}/${name}.html`, content.toString())
+}
+
+function _saveJson (json = {}, name = 'default', website) {
+
+	try	{
+		let _json = {
+			updateTime: time(),
+			name: name,
+			website: website,
+			author: '',
+			novjson: json,
+		}
+
+		let path = conf.save_novjson_path
+
+		console.log(`saveJson method param----path:${path}`)
+
+		if (!fs.existsSync(`${path}/${name}/`)) {
+			fs.mkdirSync(`${path}/${name}/`)
+		}
+
+		fs.writeFileSync(`${path}/${name}/index.json`, JSON.stringify(_json))
+	} catch (err) {
+		throw new Error(err.message)
+	}
+}
+
+function _time () {
+
+	let date = new Date()
+
+	return date.getTime()
+}
+
+function _isUpdate (t) {
+
+	if (t == '') {
+		return true
+	}
+
+	let oldDate = new Date(t)
+	let nowDate = new Date()
+	let n_s = nowDate.getTime() - oldDate
+	let day = Math.floor(n_s / (24*3600*1000))
+
+	// let s = n_s % (24*3600*1000)    //计算天数后剩余的毫秒数
+
+	// let hours = Math.floor(s / (3600*1000))
+
+	// if (nowDate.getTime() > oldDate.getTime() ) {
+	// }
+	if (day > 0) {
+		return true
+	} else {
+		return false
+	}
+}
+
+function _checkFile (filename) {
+	let path = conf.save_novjson_path
+	if (fs.existsSync(`${path}/${filename}.json`)) {
+		return true
+	} else {
+		return false
+	}
+}
+
+function _loadTimeStamp (filename) {
+
+	let path = conf.save_novjson_path
+	let fliepath = `${path}/${filename}/index.json`
+
+	if (fs.existsSync(fliepath)) {
+
+		let json = fs.readFileSync(fliepath)
+		json = json.toString()
+		// console.log(JSON.parse(json).updateTime)
+		return JSON.parse(json).updateTime
+
+	} else {
+		return ''
+	}
+}
+
+/*
+* 私有方法over
+*/
+
 
 /*
 * 1 默认初始化小说 json文件 保存章节信息
@@ -30,17 +126,17 @@ class Novel extends Website{
         super()
 	}
 
-	async init (url, novelName = this.time()) {
+	async init (url, novelName = _time()) {
 
 		this._init(url)
 
-		let timeStamp = this.loadTimeStamp(novelName)
+		let timeStamp = _loadTimeStamp(novelName)
 
-		if (this.isUpdate(timeStamp) && this.siteName) {
+		if (_isUpdate(timeStamp) && this.siteName) {
 
-			let chaptersHtml = await this._gethtml()
+			let chaptersHtml = await this.gethtml()
 			let chaptersJson = this.analysisChapter(chaptersHtml)
-			this.saveJson(chaptersJson, novelName, url)
+			_saveJson(chaptersJson, novelName, url)
 			// callback()
 			return '创建成功'
 		} else {
@@ -57,118 +153,6 @@ class Novel extends Website{
 		return result
 	}
 
-	// info (novelName) {
-
-	// 	let path = conf.save_novjson_path
-	// 	let filepath = `${path}/${novelName}/index.json`
-
-	// 	if (fs.existsSync(filepath)) {
-
-	// 		let json = fs.readFileSync(filepath)
-	// 		json = JSON.parse(json)
-	// 		return json
-	// 	} else {
-	// 		throw new Error('class: Chapter->method: load->not find')
-	// 	}
-	// }
-
-	saveHtml (content, name = 'default') {
-		console.log(content)
-		let path = conf.save_novjson_path
-		fs.writeFileSync(`${path}/${name}.html`, content.toString())
-	}
-
-	saveJson (json = {}, name = 'default', website) {
-
-		try	{
-			let _json = {
-				updateTime: this.time(),
-				name: name,
-				website: website,
-				author: '',
-				novjson: json,
-			}
-
-			let path = conf.save_novjson_path
-
-			console.log(`saveJson method param----path:${path}`)
-
-			if (!fs.existsSync(`${path}/${name}/`)) {
-				fs.mkdirSync(`${path}/${name}/`)
-			}
-
-			fs.writeFileSync(`${path}/${name}/index.json`, JSON.stringify(_json))
-		} catch (err) {
-			throw new Error(err.message)
-		}
-	}
-
-	time () {
-
-		let date = new Date()
-
-		return date.getTime()
-	}
-
-	isUpdate (t) {
-
-		if (t == '') {
-
-			return true
-		}
-
-		let oldDate = new Date(t)
-
-		let nowDate = new Date()
-
-		let n_s = nowDate.getTime() - oldDate
-
-		let day = Math.floor(n_s / (24*3600*1000))
-
-		// let s = n_s % (24*3600*1000)    //计算天数后剩余的毫秒数
-
-		// let hours = Math.floor(s / (3600*1000))
-
-		// if (nowDate.getTime() > oldDate.getTime() ) {
-		// }
-		if (day > 0) {
-
-			return true
-		} else {
-
-			return false
-		}
-	}
-
-	checkFile (filename) {
-		let path = conf.save_novjson_path
-		if (fs.existsSync(`${path}/${filename}.json`)) {
-			return true
-		} else {
-			return false
-		}
-	}
-
-	loadTimeStamp (filename) {
-
-		let path = conf.save_novjson_path
-
-		let fliepath = `${path}/${filename}/index.json`
-
-		if (fs.existsSync(fliepath)) {
-
-			let json = fs.readFileSync(fliepath)
-
-			json = json.toString()
-
-			// console.log(JSON.parse(json).updateTime)
-
-			return JSON.parse(json).updateTime
-
-		} else {
-			return ''
-		}
-	}
 }
 
 module.exports = new Novel()

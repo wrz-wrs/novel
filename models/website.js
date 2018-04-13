@@ -165,7 +165,7 @@ class Website {
 		this.content = ''
 	}
 
-	_gethtml () {
+	gethtml () {
 		let url = this.url
 		let code = this.code
 		return new Promise( function (resolve, reject) {
@@ -210,7 +210,7 @@ class Website {
 	async _search (nn) {
 		this.url += nn
 		this.url = encodeURI(this.url)
-		let html = await this._gethtml()
+		let html = await this.gethtml()
 		let result = this.site[this.siteName].analysisSearchResults(html)
 		return result
 	}
