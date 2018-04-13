@@ -1,4 +1,5 @@
 .DS_Store
+.key
 node_modules/
 novs/
 conf.js

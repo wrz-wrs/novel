@@ -1,10 +1,65 @@
+const fs = require('fs')
 const router = require('koa-router')()
+const jwt = require('jsonwebtoken')
 
 const h = require('../../conf').h
 const userdao = require('../../models/dao/userdao')
 const historydao = require('../../models/dao/historydao')
 
 // select novel
+router.get('/login', async (ctx, next) => {
+	try	{
+
+		let nickname = ctx.request.query.name
+		let password = ctx.request.query.ps
+		let result = {}
+		let prikey = fs.readFileSync(__dirname+'/../../pri.pem')
+		console.log(nickname)
+
+		if (!nickname || !password) {
+			ctx.body = ''
+		} else {
+			result = await userdao.findOne(nickname)
+		}
+		if (result.password == password && result && password) {
+			let token = jwt.sign({
+				exp: Math.floor(Date.now() / 1000) + (60 * 60 * 12),
+				data: {
+					'nickname':nickname
+				}
+			}, prikey)
+			console.log(token)
+			ctx.cookies.set('token', token, {
+				path: '/',
+				httpOnly: 'true',
+			})
+			ctx.body = '233'
+		} else {
+			ctx.body = 'password err'
+		}
+	} catch (err) {
+		ctx.body = err.message
+	}
+})
+
+router.get('/info', async (ctx) => {
+	try {
+		let res = {}
+		let uid = ctx.request.query.uid
+		let nickname = ctx.request.query.name
+		if (uid || nickname) {
+			res = await userdao.findOne(uid || nickname)
+			delete res.password
+			res = jsonPackage(res)
+			ctx.body = res
+		} else {
+			throw new Error('@params uid||name')
+		}
+	} catch (err) {
+		err_res(err, ctx, userinfoExample, userinfoExample2)
+	}
+})
+
 router.get('/create', async (ctx) => {
 	try {
 
@@ -62,6 +117,8 @@ router.get('/history', async (ctx) => {
 
 let historyExample = `${h}`+ '/api/user/history?uid=1&nid=1&cnum=1&hid=1'
 let historyExample2 = `${h}`+ '/api/user/history?uid=1&nid=1&cnum=1'
+let userinfoExample = `${h}` + '/api/user/info?uid=1'
+let userinfoExample2 = `${h}` + '/api/user/info?name=eltoo'
 
 function jsonPackage(arg) {
 	var json = {

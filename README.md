@@ -5,19 +5,24 @@
 
 * 安卓app正在开发[安卓客户端](https://github.com/clyj/DriverBook)`慢`，欢迎大家去肛他
     * github:[@clyj](https://github.com/clyj)
-    * 邮件:clyj.....
-* 后台服务开发`也慢`,去肝←↑
-    * 邮件: ......
+    * 邮件:clyj@花q.com
+* 后台服务开发`也慢`,去肛↑emmm
+    * 邮件:233@花q.com
 
 ## API
-* createNovel
-* user
-* search
-* history
-* read
-* tags
-* novelInfo
-* searchTag
+* 需要Token
+	** /api/user/info
+	** /api/user/history
+	** /api/novel/create
+	** /api/novel/read
+	** /api/novel/tags
+	** /api/novel/info
+	** searchTag
+
+* 不需要Token
+	** /api/user/create
+	** /api/user/login
+	** /api/novel/search
 
 
 ## 有问题反馈

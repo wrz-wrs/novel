@@ -43,7 +43,7 @@ class UserDao {
 				return user.dataValues
 			}
 		} catch (e) {
-			console.log(e)
+			throw new Error(e.message)
 		}
 
 	}
