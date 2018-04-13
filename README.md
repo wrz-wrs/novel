@@ -3,11 +3,11 @@
 ## Novel是什么?
 为一个小说阅读软件提供api的server代码
 
-* 安卓app正在开发...`慢`，欢迎大家去肛他
+* 安卓app正在开发[安卓客户端](https://github.com/clyj/DriverBook)`慢`，欢迎大家去肛他
     * github:[@clyj](https://github.com/clyj)
     * 邮件:clyj.....
-* 后台服务开发`也慢`,去肝↑
-    * 邮件: ......
+* 后台服务开发`也慢`,去肝←↑
+    * 邮件: ......
 
 ## API
 * createNovel
