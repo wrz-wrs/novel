@@ -47,6 +47,29 @@ class NovelDao {
 		}
 	}
 
+	async findAll (...arg) {
+		let novels = {}
+		if (arg[0] == '') {
+			novels = await Model.Novel.findAll({
+				limit: arg[1],
+				offset: arg[2],
+			})
+		} else {
+			novels = await Model.Novel.findAll({
+				where: {
+					type: arg[0],
+				},
+				limit: arg[1],
+				offset: arg[2],
+			})
+		}
+
+		let result = []
+		for(let key in novels) {
+			result.push(novels[key].dataValues)
+		}
+		return result
+	}
 }
 
 module.exports = new NovelDao()

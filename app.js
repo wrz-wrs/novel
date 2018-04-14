@@ -29,9 +29,13 @@ app.use(bodyParser())
 
 
 const unTokenList = [
+	'/api/doc',
 	'/api/user/login',
 	'/api/user/create',
-	'/api/doc'
+	'/api/novel/info',
+	'/api/novel/search',
+	'/api/novel/read',
+	'/api/novel/list'
 ]
 
 app.use(async (ctx, next) => {

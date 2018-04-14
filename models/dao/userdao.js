@@ -12,8 +12,17 @@ class UserDao {
 		})
 	}
 
-	async update () {
+	async update (arg, id) {
 		// await Model.User.
+		try {
+			await Model.User.update(arg,{
+				where: {
+					id: id
+				}
+			})
+		} catch (err) {
+			throw new Error(err.message)
+		}
 	}
 
 	async findOne (arg) {

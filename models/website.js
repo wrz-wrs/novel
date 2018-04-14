@@ -65,6 +65,7 @@ const biqugezw = {
 	}
 }
 
+// www.23us.so
 const us23 = {
 	code: 'utf8',
 
@@ -170,9 +171,7 @@ class Website {
 		let code = this.code
 		return new Promise( function (resolve, reject) {
 			var body = ''
-			console.log('\n\n\n')
-			console.log(`解析url：${url}`)
-			console.log('\n\n\n')
+			console.log(`\n解析url：${url}\n`)
 			http.get(url, function (res) {
 				var chunks = []
 				res.on('data', function(chunk){
@@ -220,15 +219,12 @@ class Website {
 		this.url = paramurl
 		this.siteName = this._analysisUrl(this.url)
 		this.code = this.site[this.siteName].code
-
-		console.log(this.url)
 	}
 
 	_init2 (paramurl) {
 		this.url = paramurl
 		this.siteName = this._analysisUrl(paramurl)
 		this.code = this.site[this.siteName].code
-		// return this.code
 	}
 
 	_init3 (_site) {

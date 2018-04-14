@@ -23,7 +23,7 @@ router.get('/login', async (ctx, next) => {
 		}
 		if (result.password == password && result && password) {
 			let token = jwt.sign({
-				exp: Math.floor(Date.now() / 1000) + (60 * 60 * 12),
+				exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24),
 				data: {
 					'nickname':nickname
 				}
@@ -47,8 +47,10 @@ router.get('/info', async (ctx) => {
 		let res = {}
 		let uid = ctx.request.query.uid
 		let nickname = ctx.request.query.name
+		uid = parseInt(uid)
 		if (uid || nickname) {
-			res = await userdao.findOne(uid || nickname)
+			let arg = uid || nickname
+			res = await userdao.findOne(arg)
 			delete res.password
 			res = jsonPackage(res)
 			ctx.body = res
@@ -57,6 +59,34 @@ router.get('/info', async (ctx) => {
 		}
 	} catch (err) {
 		err_res(err, ctx, userinfoExample, userinfoExample2)
+	}
+})
+
+router.post('/update', async (ctx) => {
+	try {
+		let res = {}
+		let id = ctx.request.query.uid
+		let sex = ctx.request.query.sex || '♂♀'
+		let info = ctx.request.query.info || ''
+		let password = ctx.request.query.ps
+
+		if (!id) {
+			throw new Error('@params uid')
+		} else {
+			let _o = {
+				sex,
+				info,
+				password,
+			}
+			if (!password) {
+				delete _o.password
+			}
+			console.log(_o)
+			await userdao.update(_o, id)
+			ctx.body = jsonPackage(res)
+		}
+	} catch (err) {
+		err_res(err, ctx)
 	}
 })
 

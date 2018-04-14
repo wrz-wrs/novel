@@ -11,7 +11,6 @@ router.get('/info', async (ctx) => {
 	try {
 
 		let novelname = ctx.request.query.an
-		// let chapterNumber = ctx.request.query.cn
 		let res = {}
 
 		if (!novelname) {
@@ -22,28 +21,13 @@ router.get('/info', async (ctx) => {
 		} else {
 
 			let json = await noveldao.findOne(novelname)
-			let name = json.name
-			let source = json.source
-			let author = json.author
-			let cover = json.cover
-			let type = json.type
-			// let timeStamp = json.updateTime
 			let _o = {
-				name,
-				author,
-				cover,
-				type,
-				source,
+				name: 	json.name,
+				author: json.author,
+				cover: 	json.cover,
+				type: 	json.type,
+				source: json.source,
 			}
-
-			// if (chapterNumber) {
-			// 	_o.title = json.novjson[chapterNumber].serial
-			// 	let chapterUrl = json.novjson[chapterNumber].url
-			// 	_o.content = await chapter.init(chapterUrl)
-
-			// } else {
-			// 	_o.content = json.novjson
-			// }
 
 			res = jsonPackage(_o)
 			res.example = `${h}/api/novel/info?an=放开那个女巫`
@@ -126,6 +110,25 @@ router.get('/tags', async (ctx) => {
 	}
 })
 
+router.get('/list', async (ctx) => {
+	try {
+		let res = {}
+		let type = ctx.request.query.type
+		let limit = ctx.request.query.limit || 10
+		let offset = ctx.request.query.offset || 0
+
+		if (!type) {
+			res = await noveldao.findAll('', limit, offset)
+		} else {
+			res = await noveldao.findAll(type, limit, offset)
+		}
+		res = jsonPackage(res)
+		ctx.body = res
+	} catch (err) {
+		err_res(err, ctx)
+	}
+})
+
 router.get('/searchTag', async (ctx) => {
 	try {
 		// throw new Error('??????')
@@ -158,7 +161,7 @@ router.get('/read', async (ctx) => {
 		let an = ctx.request.query.an
 		let chaNum = ctx.request.query.cno
 		if (!an || !chaNum) {
-			throw new Error('@params an chaNum')
+			throw new Error('@params an cno')
 		} else {
 			// chapterContent => cc
 			let cc = await chapter._load(an, chaNum)
@@ -166,7 +169,7 @@ router.get('/read', async (ctx) => {
 			ctx.body = res
 		}
 	} catch (err) {
-		await err_res(err, ctx, readExample1)
+		await err_res(err, ctx, readExample)
 	}
 })
 
@@ -177,7 +180,7 @@ let tagsExample = `${h}`+
 let readExample1 = `${h}`+
 '/api/novel/tags?novelid=1&tagname=放开那个女巫&cno=1'
 
-let readExample = `${h}`+'/api/novel/read?an=放开那个女巫&chaNum=1'
+let readExample = `${h}`+'/api/novel/read?an=放开那个女巫&cno=1'
 
 function jsonPackage(arg) {
 	var json = {

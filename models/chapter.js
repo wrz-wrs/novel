@@ -16,7 +16,8 @@ function _saveJson (novelName, num, txt) {
 
 	let path = conf.save_novjson_path
 	let _num = parseInt(num / 100)
-	// let _remainder = num % 100let filepath = `${path}/${novelName}/${_num.toString()}.json`
+	// let _remainder = num % 100
+	let filepath = `${path}/${novelName}/${_num.toString()}.json`
 	let content = {}
 
 	if (fs.existsSync(filepath)) {
@@ -82,7 +83,7 @@ class getChapter extends Website{
 	}
 
 	async _load (name, num) {
-		let a = noveldao.findOne(name)
+		let a = await noveldao.findOne(name)
 		if (!a) {
 			throw new Error('class: Chapter->method: _load->select 0')
 		} else {
@@ -94,9 +95,15 @@ class getChapter extends Website{
 				return content
 			} else {
 				let chas = this.info(name)
-				let url = chas.novjson[num].url
-				console.log(url+'??????????/')
-				return this.init(url, name, num)
+				if (chas) {
+					let url = chas.novjson[num].url
+					console.log(url+'??????????/')
+					return this.init(url, name, num)
+				} else {
+					console.log(a.source)
+					await novel.init(a.source, name)
+					await this._load(name, num)
+				}
 			}
 		}
 	}
@@ -114,7 +121,8 @@ class getChapter extends Website{
 
 			return json
 		} else {
-			throw new Error('class: Chapter->method: load->not find')
+			return false
+			// throw new Error('class: Chapter->method: info->not find')
 		}
 	}
 

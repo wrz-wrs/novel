@@ -7,23 +7,24 @@
     * github:[@clyj](https://github.com/clyj)
     * 邮件:clyj@花q.com
 * 后台服务开发`也慢`,去肛↑emmm
-    * 邮件:233@花q.com
+    * 邮件:233@花q.com
 
 ## API
 * 需要Token
-	** /api/user/info
-	** /api/user/history
-	** /api/novel/create
-	** /api/novel/read
-	** /api/novel/tags
-	** /api/novel/info
-	** searchTag
+    ** /api/user/info
+    ** /api/user/update
+    ** /api/user/history
+    ** /api/novel/create
+    ** /api/novel/tags 为小说添加tag
+    ** searchTag
 
 * 不需要Token
-	** /api/user/create
-	** /api/user/login
-	** /api/novel/search
-
+    ** /api/user/create
+    ** /api/user/login
+    ** /api/novel/search
+    ** /api/novel/read
+    ** /api/novel/info
+    ** /api/novel/list
 
 ## 有问题反馈
 * 安卓问题：[@clyj](https://github.com/clyj)

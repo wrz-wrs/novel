@@ -32,7 +32,7 @@ function _saveJson (json = {}, name = 'default', website) {
 
 	try	{
 		let _json = {
-			updateTime: time(),
+			updateTime: _time(),
 			name: name,
 			website: website,
 			author: '',
