@@ -26,6 +26,49 @@
     * /api/novel/info
     * /api/novel/list
 
+## User API详细
+* /api/user/create @params un&ps
+    * un用户名，ps密码这两参数`必须`
+    * example:/api/user/create?un=user1&ps=123456
+
+* /api/novel/info @params uid||name
+    * uid(用户id)或者name(用户名)`必须一个`
+    * example:/api/novel/info?uid=1
+
+* /api/user/update @params uid&sex&info&ps
+    * uid用户id`必须`
+    * info和sex`保持不更改需要`从/api/user/info中获取，默认sex='♂♀'&info='',ps选填可用于更改密码
+    * example:/api/user/update?id=1&info=2333&sex=♂
+
+* /api/user/login @params name&ps
+    * 必填参数
+    * example:/api/user/login?name=eltoo&ps=123456
+
+## Novel API
+novel处理比较特殊，爬虫不会主动去爬取资源，需要用户先search后调用create_Api才能在服务器中生成某本小说的详情
+
+* /api/novel/search @params an
+    * na小说名`必须`
+    * example:/api/novel/search?an=放开那个女巫
+
+* /api/novel/create @params an&cover&index&type&author
+    * must_params: an(书名),cover(封面),index(章节列表页地址),type(类型),author(作者)
+    * 从/api/novel/search获得
+    * example:/api/novel/create?an=放开那个女巫&cover=...&index=...&type=...&author=...
+
+* /api/novel/info @params an
+    * must_params: an(书名)
+    * example:/api/novel/info?an=放开那个女巫
+
+* /api/novel/list @params type&limit&offset
+    * must_params: type(类型)
+    * default:limit=10, offset=0(没有此参数服务器默认值)
+    * example:/api/novel/list?type=魔法&limit=10&offset=0
+
+* /api/novel/read @params an&cno
+    * must_params: an(书名),cno(章节)
+    * example:/api/novel/read?an=放开那个女巫&cno=1
+
 ## 有问题反馈
 * 安卓问题：[@clyj](https://github.com/clyj)
 * 服务：[@me](https://github.com/zimulili)
