@@ -69,16 +69,16 @@ novel处理比较特殊，爬虫不会主动去爬取资源，需要用户先sea
 
 * /api/novel/info @params an
     * must_params: an(书名)
-    * example:/api/novel/info?an=放开那个女巫 [图](https://github.com/zimulili/novel/master/ER/novel-info.png)
+    * example:/api/novel/info?an=放开那个女巫 [图](https://github.com/zimulili/novel/blob/master/RE/novel-info.png)
 
 * /api/novel/list @params type&limit&offset
     * must_params: type(类型)
     * default:limit=10, offset=0(没有此参数服务器默认值)
-    * example:/api/novel/list?type=魔法&limit=10&offset=0 [图](https://github.com/zimulili/novel/master/ER/novel-list.png)
+    * example:/api/novel/list?type=魔法&limit=10&offset=0 [图](https://github.com/zimulili/novel/blob/master/RE/novel-info.png)
 
 * /api/novel/read @params an&cno
     * must_params: an(书名),cno(章节)
-    * example:/api/novel/read?an=放开那个女巫&cno=1 [图](https://github.com/zimulili/novel/master/ER/novel-read.png)
+    * example:/api/novel/read?an=放开那个女巫&cno=1 [图](https://github.com/zimulili/novel/blob/master/RE/novel-info.png)
 
 ## 有问题反馈
 * 安卓问题：[@clyj](https://github.com/clyj)
