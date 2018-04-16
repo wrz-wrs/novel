@@ -7,7 +7,7 @@ const userdao = require('../../models/dao/userdao')
 const historydao = require('../../models/dao/historydao')
 
 // select novel
-router.get('/login', async (ctx, next) => {
+router.post('/login', async (ctx, next) => {
 	try	{
 
 		let nickname = ctx.request.query.name
@@ -90,7 +90,7 @@ router.post('/update', async (ctx) => {
 	}
 })
 
-router.get('/create', async (ctx) => {
+router.post('/create', async (ctx) => {
 	try {
 
 		let nickname = ctx.request.query.un
@@ -113,13 +113,13 @@ router.get('/create', async (ctx) => {
 	}
 })
 
-router.get('/history', async (ctx) => {
+router.post('/history', async (ctx) => {
 	try	{
 		let res = {}
 		let id = ctx.request.query.hid
 		let userid = ctx.request.query.uid
 		let novelid = ctx.request.query.nid
-		let chapter = ctx.request.query.cnum
+		let chapter = ctx.request.query.cno
 
 		let _o = {userid, novelid, chapter}
 		if (id && userid && novelid && chapter) {
@@ -137,7 +137,7 @@ router.get('/history', async (ctx) => {
 			ctx.body = res
 
 		} else {
-			throw new Error('@params uid||nid||cnum')
+			throw new Error('@params uid||nid||cno')
 		}
 		// await err_res(err, ctx)
 	} catch (err) {
@@ -145,8 +145,24 @@ router.get('/history', async (ctx) => {
 	}
 })
 
-let historyExample = `${h}`+ '/api/user/history?uid=1&nid=1&cnum=1&hid=1'
-let historyExample2 = `${h}`+ '/api/user/history?uid=1&nid=1&cnum=1'
+router.get('/history', async (ctx) => {
+	try {
+		let res = {}
+		let uid = ctx.request.query.uid
+		if (!uid) {
+			throw new Error('check params')
+		} else {
+			res = await historydao.findAll(uid)
+			ctx.body = jsonPackage(res)
+		}
+	} catch (err) {
+		err_res(err, ctx)
+	}
+})
+
+
+let historyExample = `${h}`+ '/api/user/history?uid=1&nid=1&cno=1&hid=1'
+let historyExample2 = `${h}`+ '/api/user/history?uid=1&nid=1&cno=1'
 let userinfoExample = `${h}` + '/api/user/info?uid=1'
 let userinfoExample2 = `${h}` + '/api/user/info?name=eltoo'
 

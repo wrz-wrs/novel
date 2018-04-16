@@ -2,6 +2,7 @@
 
 ## Novel是什么?
 为一个小说阅读软件提供api的server代码
+服务器运行版本`v0.3.0` 查看api请切换tag到v0.3.0
 
 * 安卓app正在开发[安卓客户端](https://github.com/clyj/DriverBook)`慢`，欢迎大家去肛他
     * github:[@clyj](https://github.com/clyj)
@@ -27,24 +28,34 @@
     * /api/novel/list
 
 ## User API详细
-* /api/user/create @params un&ps
+* /api/user/create @params un&ps  method:post
     * un用户名，ps密码这两参数`必须`
     * example:/api/user/create?un=user1&ps=123456
 
-* /api/novel/info @params uid||name
+* /api/novel/info @params uid||name  method:get
     * uid(用户id)或者name(用户名)`必须一个`
     * example:/api/novel/info?uid=1
 
-* /api/user/update @params uid&sex&info&ps
+* /api/user/update @params uid&sex&info&ps  method:post
     * uid用户id`必须`
     * info和sex`保持不更改需要`从/api/user/info中获取，默认sex='♂♀'&info='',ps选填可用于更改密码
     * example:/api/user/update?id=1&info=2333&sex=♂
 
-* /api/user/login @params name&ps
+* /api/user/login @params name&ps  method:post
     * 必填参数
     * example:/api/user/login?name=eltoo&ps=123456
 
-## Novel API
+* /api/user/history method:post @params uid&nid&cno&hid
+    * must_params: uid(用户id),nid(小说id),cno(章节)
+    * hid(历史记录id)，可选项
+    * example0:/api/user/history?uid=1&nid=1&cno=1
+    * example1:/api/user/history?uid=1&nid=1&cno=1&hid=1
+
+* /api/user/history method:get @params uid
+    * must_params: uid(用户id) 获取用户所以历史记录
+    
+
+## Novel API (all method:get)
 novel处理比较特殊，爬虫不会主动去爬取资源，需要用户先search后调用create_Api才能在服务器中生成某本小说的详情
 
 * /api/novel/search @params an

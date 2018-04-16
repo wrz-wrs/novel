@@ -32,6 +32,24 @@ class HistoryDao {
 			throw new Error(err.message)
 		}
 	}
+
+	async findAll (arg) {
+		let user = {}
+		if (!arg) {
+			historys = await Model.History.findAll()
+		} else {
+			historys = await Model.History.findAll({
+				where: {
+					userid: arg
+				}
+			})
+		}
+		if (!historys) {
+			return {}
+		} else {
+			return historys.dataValues
+		}
+	}
 }
 
 module.exports = new HistoryDao()
