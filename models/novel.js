@@ -126,7 +126,7 @@ class Novel extends Website{
         super()
 	}
 
-	async init (url, novelName = _time()) {
+	async init (url, novelName) {
 
 		this._init(url)
 
@@ -138,7 +138,7 @@ class Novel extends Website{
 			let chaptersJson = this.analysisChapter(chaptersHtml)
 			_saveJson(chaptersJson, novelName, url)
 			// callback()
-			return '创建成功'
+			return '更新完成'
 		} else {
 			console.log(`24小时后更新...`)
 			return '24小时后更新...'

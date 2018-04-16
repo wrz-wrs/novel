@@ -21,7 +21,9 @@ router.get('/info', async (ctx) => {
 		} else {
 
 			let json = await noveldao.findOne(novelname)
+			let update = await novel.init(json.source, json.name)
 			let _o = {
+				update: update,
 				name: 	json.name,
 				author: json.author,
 				cover: 	json.cover,
