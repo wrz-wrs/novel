@@ -10,11 +10,12 @@ const historydao = require('../../models/dao/historydao')
 router.post('/login', async (ctx, next) => {
 	try	{
 
-		let nickname = ctx.request.query.name
-		let password = ctx.request.query.ps
+		console.log(ctx.request.body)
+		let nickname = ctx.request.query.name || ctx.request.body.name
+		let password = ctx.request.query.ps || ctx.request.body.ps
 		let result = {}
 		let prikey = fs.readFileSync(__dirname+'/../../pri.pem')
-		console.log(nickname)
+		console.log(password)
 
 		if (!nickname || !password) {
 			ctx.body = ''
@@ -65,10 +66,10 @@ router.get('/info', async (ctx) => {
 router.post('/update', async (ctx) => {
 	try {
 		let res = {}
-		let id = ctx.request.query.uid
-		let sex = ctx.request.query.sex || '♂♀'
-		let info = ctx.request.query.info || ''
-		let password = ctx.request.query.ps
+		let id = ctx.request.query.uid || ctx.request.body.uid
+		let sex = ctx.request.query.sex || '♂♀' || ctx.request.body.sex
+		let info = ctx.request.query.info || '' || ctx.request.body.info
+		let password = ctx.request.query.ps || ctx.request.body.ps
 
 		if (!id) {
 			throw new Error('@params uid')
@@ -93,8 +94,8 @@ router.post('/update', async (ctx) => {
 router.post('/create', async (ctx) => {
 	try {
 
-		let nickname = ctx.request.query.un
-		let password = ctx.request.query.ps
+		let nickname = ctx.request.query.un || ctx.request.body.un
+		let password = ctx.request.query.ps || ctx.request.body.ps
 
 		if (nickname && password) {
 
@@ -116,10 +117,10 @@ router.post('/create', async (ctx) => {
 router.post('/history', async (ctx) => {
 	try	{
 		let res = {}
-		let id = ctx.request.query.hid
-		let userid = ctx.request.query.uid
-		let novelid = ctx.request.query.nid
-		let chapter = ctx.request.query.cno
+		let id = ctx.request.query.hid || ctx.request.body.hid
+		let userid = ctx.request.query.uid || ctx.request.body.uid
+		let novelid = ctx.request.query.nid || ctx.request.body.nid
+		let chapter = ctx.request.query.cno || ctx.request.body.cno
 
 		let _o = {userid, novelid, chapter}
 		if (id && userid && novelid && chapter) {
